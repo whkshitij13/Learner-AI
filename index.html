@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learner DEV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-glow page-glow-left"></div>
+  <div class="page-glow page-glow-right"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">LD</div>
+      <div>
+        <h1>Learner DEV</h1>
+      </div>
+    </div>
+
+    <nav class="tabs" aria-label="Main sections">
+      <button class="tab active" data-tab="lwc">LWC</button>
+      <button class="tab" data-tab="apex">Apex</button>
+      <button class="tab" data-tab="practice">Practice Lab</button>
+      <button class="tab" data-tab="final">Final Test</button>
+    </nav>
+
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode">
+      <span class="theme-icon theme-sun" aria-hidden="true">&#9728;</span>
+      <span class="theme-icon theme-moon" aria-hidden="true">&#9789;</span>
+    </button>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <p class="eyebrow">Study Control</p>
+        <div class="sidebar-title">
+          <span id="sidebarHeading">LWC Curriculum</span>
+          <span class="pill" id="topicCount">0</span>
+        </div>
+
+        <input id="searchBox" class="search" type="search" placeholder="Search topics, levels, or keywords" />
+
+        <div class="progress-card">
+          <div class="progress-meta">
+            <span>Curriculum progress</span>
+            <span id="progressText">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="progressBar"></div>
+          </div>
+        </div>
+
+        <div id="topicList" class="topic-list"></div>
+      </div>
+    </aside>
+
+    <main class="content" id="content"></main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
