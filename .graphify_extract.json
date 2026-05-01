@@ -1,0 +1,2275 @@
+{
+  "nodes": [
+    {
+      "id": "next_config_mjs",
+      "label": "next.config.mjs",
+      "file_type": "code",
+      "source_file": "next.config.mjs",
+      "source_location": "L1"
+    },
+    {
+      "id": "script_js",
+      "label": "script.js",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "learner_dev_script_applytheme",
+      "label": "applyTheme()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2267"
+    },
+    {
+      "id": "learner_dev_script_gettopicpool",
+      "label": "getTopicPool()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2274"
+    },
+    {
+      "id": "learner_dev_script_getcurrenttopic",
+      "label": "getCurrentTopic()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2287"
+    },
+    {
+      "id": "learner_dev_script_settab",
+      "label": "setTab()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2291"
+    },
+    {
+      "id": "learner_dev_script_rendersidebar",
+      "label": "renderSidebar()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2308"
+    },
+    {
+      "id": "learner_dev_script_getcompletionpercent",
+      "label": "getCompletionPercent()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2366"
+    },
+    {
+      "id": "learner_dev_script_rendermain",
+      "label": "renderMain()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2372"
+    },
+    {
+      "id": "learner_dev_script_renderlessonview",
+      "label": "renderLessonView()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2384"
+    },
+    {
+      "id": "learner_dev_script_renderminiquiz",
+      "label": "renderMiniQuiz()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2516"
+    },
+    {
+      "id": "learner_dev_script_renderpracticelab",
+      "label": "renderPracticeLab()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2552"
+    },
+    {
+      "id": "learner_dev_script_renderfinaltest",
+      "label": "renderFinalTest()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2626"
+    },
+    {
+      "id": "learner_dev_script_renderfinalmcq",
+      "label": "renderFinalMcq()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2668"
+    },
+    {
+      "id": "learner_dev_script_renderfinalcodingprompts",
+      "label": "renderFinalCodingPrompts()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2702"
+    },
+    {
+      "id": "learner_dev_script_escapehtml",
+      "label": "escapeHtml()",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": "L2728"
+    },
+    {
+      "id": "app_layout_js",
+      "label": "layout.js",
+      "file_type": "code",
+      "source_file": "app\\layout.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_layout_rootlayout",
+      "label": "RootLayout()",
+      "file_type": "code",
+      "source_file": "app\\layout.js",
+      "source_location": "L8"
+    },
+    {
+      "id": "app_page_js",
+      "label": "page.js",
+      "file_type": "code",
+      "source_file": "app\\page.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_page_buildtrackstats",
+      "label": "buildTrackStats()",
+      "file_type": "code",
+      "source_file": "app\\page.js",
+      "source_location": "L4"
+    },
+    {
+      "id": "app_page_page",
+      "label": "Page()",
+      "file_type": "code",
+      "source_file": "app\\page.js",
+      "source_location": "L19"
+    },
+    {
+      "id": "app_api_ai_feedback_route_js",
+      "label": "route.js",
+      "file_type": "code",
+      "source_file": "app\\api\\ai-feedback\\route.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "ai_feedback_route_fetchgeminifeedback",
+      "label": "fetchGeminiFeedback()",
+      "file_type": "code",
+      "source_file": "app\\api\\ai-feedback\\route.js",
+      "source_location": "L4"
+    },
+    {
+      "id": "ai_feedback_route_post",
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "app\\api\\ai-feedback\\route.js",
+      "source_location": "L62"
+    },
+    {
+      "id": "app_api_tracks_track_route_js",
+      "label": "route.js",
+      "file_type": "code",
+      "source_file": "app\\api\\tracks\\[track]\\route.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "track_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "app\\api\\tracks\\[track]\\route.js",
+      "source_location": "L4"
+    },
+    {
+      "id": "app_api_tracks_track_topicid_route_js",
+      "label": "route.js",
+      "file_type": "code",
+      "source_file": "app\\api\\tracks\\[track]\\[topicId]\\route.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "topicid_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "app\\api\\tracks\\[track]\\[topicId]\\route.js",
+      "source_location": "L4"
+    },
+    {
+      "id": "app_dashboard_page_js",
+      "label": "page.js",
+      "file_type": "code",
+      "source_file": "app\\dashboard\\page.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "dashboard_page_dashboardpage",
+      "label": "DashboardPage()",
+      "file_type": "code",
+      "source_file": "app\\dashboard\\page.js",
+      "source_location": "L4"
+    },
+    {
+      "id": "app_dashboard_track_page_js",
+      "label": "page.js",
+      "file_type": "code",
+      "source_file": "app\\dashboard\\[track]\\page.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "track_page_generatestaticparams",
+      "label": "generateStaticParams()",
+      "file_type": "code",
+      "source_file": "app\\dashboard\\[track]\\page.js",
+      "source_location": "L7"
+    },
+    {
+      "id": "track_page_trackdashboardpage",
+      "label": "TrackDashboardPage()",
+      "file_type": "code",
+      "source_file": "app\\dashboard\\[track]\\page.js",
+      "source_location": "L11"
+    },
+    {
+      "id": "components_auth_panel_jsx",
+      "label": "auth-panel.jsx",
+      "file_type": "code",
+      "source_file": "components\\auth-panel.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_auth_panel_authpanel",
+      "label": "AuthPanel()",
+      "file_type": "code",
+      "source_file": "components\\auth-panel.jsx",
+      "source_location": "L5"
+    },
+    {
+      "id": "components_diagram_card_jsx",
+      "label": "diagram-card.jsx",
+      "file_type": "code",
+      "source_file": "components\\diagram-card.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_diagram_card_diagramcard",
+      "label": "DiagramCard()",
+      "file_type": "code",
+      "source_file": "components\\diagram-card.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_hero_scene_jsx",
+      "label": "hero-scene.jsx",
+      "file_type": "code",
+      "source_file": "components\\hero-scene.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_hero_scene_orbitalshapes",
+      "label": "OrbitalShapes()",
+      "file_type": "code",
+      "source_file": "components\\hero-scene.jsx",
+      "source_location": "L7"
+    },
+    {
+      "id": "components_hero_scene_heroscene",
+      "label": "HeroScene()",
+      "file_type": "code",
+      "source_file": "components\\hero-scene.jsx",
+      "source_location": "L45"
+    },
+    {
+      "id": "components_landing_page_jsx",
+      "label": "landing-page.jsx",
+      "file_type": "code",
+      "source_file": "components\\landing-page.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_landing_page_landingpage",
+      "label": "LandingPage()",
+      "file_type": "code",
+      "source_file": "components\\landing-page.jsx",
+      "source_location": "L28"
+    },
+    {
+      "id": "components_learner_dev_app_shell_jsx",
+      "label": "learner-dev-app-shell.jsx",
+      "file_type": "code",
+      "source_file": "components\\learner-dev-app-shell.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_learner_dev_app_shell_learnerdevappshell",
+      "label": "LearnerDevAppShell()",
+      "file_type": "code",
+      "source_file": "components\\learner-dev-app-shell.jsx",
+      "source_location": "L9"
+    },
+    {
+      "id": "components_learner_dev_app_jsx",
+      "label": "learner-dev-app.jsx",
+      "file_type": "code",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_learner_dev_app_getstoredobject",
+      "label": "getStoredObject()",
+      "file_type": "code",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L30"
+    },
+    {
+      "id": "components_learner_dev_app_getalltopics",
+      "label": "getAllTopics()",
+      "file_type": "code",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L42"
+    },
+    {
+      "id": "components_learner_dev_app_gettopicpool",
+      "label": "getTopicPool()",
+      "file_type": "code",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L46"
+    },
+    {
+      "id": "components_learner_dev_app_getcompletionpercent",
+      "label": "getCompletionPercent()",
+      "file_type": "code",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L62"
+    },
+    {
+      "id": "components_learner_dev_app_getinitials",
+      "label": "getInitials()",
+      "file_type": "code",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L67"
+    },
+    {
+      "id": "components_learner_dev_app_learnerdevapp",
+      "label": "LearnerDevApp()",
+      "file_type": "code",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L77"
+    },
+    {
+      "id": "components_media_shelf_jsx",
+      "label": "media-shelf.jsx",
+      "file_type": "code",
+      "source_file": "components\\media-shelf.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_media_shelf_mediashelf",
+      "label": "MediaShelf()",
+      "file_type": "code",
+      "source_file": "components\\media-shelf.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_practice_terminal_jsx",
+      "label": "practice-terminal.jsx",
+      "file_type": "code",
+      "source_file": "components\\practice-terminal.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_practice_terminal_practiceterminal",
+      "label": "PracticeTerminal()",
+      "file_type": "code",
+      "source_file": "components\\practice-terminal.jsx",
+      "source_location": "L13"
+    },
+    {
+      "id": "components_topic_dashboard_jsx",
+      "label": "topic-dashboard.jsx",
+      "file_type": "code",
+      "source_file": "components\\topic-dashboard.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_topic_dashboard_getstoredtopics",
+      "label": "getStoredTopics()",
+      "file_type": "code",
+      "source_file": "components\\topic-dashboard.jsx",
+      "source_location": "L17"
+    },
+    {
+      "id": "components_topic_dashboard_topicdashboard",
+      "label": "TopicDashboard()",
+      "file_type": "code",
+      "source_file": "components\\topic-dashboard.jsx",
+      "source_location": "L29"
+    },
+    {
+      "id": "lib_ai_review_js",
+      "label": "ai-review.js",
+      "file_type": "code",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_ai_review_analyzelwc",
+      "label": "analyzeLwc()",
+      "file_type": "code",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_ai_review_analyzeapex",
+      "label": "analyzeApex()",
+      "file_type": "code",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L45"
+    },
+    {
+      "id": "lib_ai_review_buildpracticereview",
+      "label": "buildPracticeReview()",
+      "file_type": "code",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L83"
+    },
+    {
+      "id": "lib_ai_review_getfallbacktemplate",
+      "label": "getFallbackTemplate()",
+      "file_type": "code",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L87"
+    },
+    {
+      "id": "lib_curriculum_js",
+      "label": "curriculum.js",
+      "file_type": "code",
+      "source_file": "lib\\curriculum.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_curriculum_loadlegacycurriculum",
+      "label": "loadLegacyCurriculum()",
+      "file_type": "code",
+      "source_file": "lib\\curriculum.js",
+      "source_location": "L7"
+    },
+    {
+      "id": "lib_recommendations_js",
+      "label": "recommendations.js",
+      "file_type": "code",
+      "source_file": "lib\\recommendations.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_firebase_client_js",
+      "label": "client.js",
+      "file_type": "code",
+      "source_file": "lib\\firebase\\client.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "firebase_client_ensurefirebaseready",
+      "label": "ensureFirebaseReady()",
+      "file_type": "code",
+      "source_file": "lib\\firebase\\client.js",
+      "source_location": "L14"
+    },
+    {
+      "id": "next_config",
+      "label": "Next.js Runtime Config",
+      "file_type": "code",
+      "source_file": "next.config.mjs",
+      "source_location": null,
+      "summary": "Enables experimental optimizePackageImports for firebase.",
+      "kind": "config"
+    },
+    {
+      "id": "root_layout",
+      "label": "Root App Layout",
+      "file_type": "code",
+      "source_file": "app/layout.js",
+      "source_location": null,
+      "summary": "Provides shared HTML/body shell and metadata for App Router pages.",
+      "kind": "route_layout"
+    },
+    {
+      "id": "legacy_static_app",
+      "label": "Legacy Static Learning App",
+      "file_type": "document",
+      "source_file": "index.html",
+      "source_location": null,
+      "summary": "Original browser-only learning hub with tabs, quizzes, theme toggle, and localStorage progress.",
+      "kind": "legacy_ui"
+    },
+    {
+      "id": "legacy_curriculum_data",
+      "label": "Legacy Curriculum Dataset",
+      "file_type": "code",
+      "source_file": "script.js",
+      "source_location": null,
+      "summary": "Defines DATA and CURRICULUM_AUDIT for LWC, Apex, and final test content.",
+      "kind": "data_source"
+    },
+    {
+      "id": "curriculum_loader",
+      "label": "Legacy Curriculum Loader",
+      "file_type": "code",
+      "source_file": "lib/curriculum.js",
+      "source_location": null,
+      "summary": "Reads script.js, slices before UI state setup, evaluates DATA and CURRICULUM_AUDIT in a VM, and caches the result.",
+      "kind": "server_lib"
+    },
+    {
+      "id": "landing_route",
+      "label": "Landing Page Route",
+      "file_type": "code",
+      "source_file": "app/page.js",
+      "source_location": null,
+      "summary": "Builds per-track statistics from the legacy curriculum and renders the marketing/auth landing page.",
+      "kind": "page_route"
+    },
+    {
+      "id": "dashboard_index_route",
+      "label": "Dashboard Index Route",
+      "file_type": "code",
+      "source_file": "app/dashboard/page.js",
+      "source_location": null,
+      "summary": "Loads curriculum and opens the dashboard on the default LWC track.",
+      "kind": "page_route"
+    },
+    {
+      "id": "dashboard_track_route",
+      "label": "Dynamic Dashboard Track Route",
+      "file_type": "code",
+      "source_file": "app/dashboard/[track]/page.js",
+      "source_location": null,
+      "summary": "Statically enumerates lwc/apex routes, validates the track param, and renders the track dashboard.",
+      "kind": "page_route"
+    },
+    {
+      "id": "track_collection_api",
+      "label": "Track Collection API",
+      "file_type": "code",
+      "source_file": "app/api/tracks/[track]/route.js",
+      "source_location": null,
+      "summary": "Returns final-test payloads or summary metadata for one curriculum track.",
+      "kind": "api_route"
+    },
+    {
+      "id": "topic_detail_api",
+      "label": "Topic Detail API",
+      "file_type": "code",
+      "source_file": "app/api/tracks/[track]/[topicId]/route.js",
+      "source_location": null,
+      "summary": "Returns the full topic object for a given track and topic id.",
+      "kind": "api_route"
+    },
+    {
+      "id": "ai_feedback_api",
+      "label": "AI Feedback API",
+      "file_type": "code",
+      "source_file": "app/api/ai-feedback/route.js",
+      "source_location": null,
+      "summary": "Combines local practice validation with optional Gemini JSON feedback and a fallback template.",
+      "kind": "api_route"
+    },
+    {
+      "id": "landing_page",
+      "label": "LandingPage Component",
+      "file_type": "code",
+      "source_file": "components/landing-page.jsx",
+      "source_location": null,
+      "summary": "Homepage UI with track metrics, inline Firebase email auth, media section placeholders, and dashboard links.",
+      "kind": "client_component"
+    },
+    {
+      "id": "topic_dashboard",
+      "label": "TopicDashboard Component",
+      "file_type": "code",
+      "source_file": "components/topic-dashboard.jsx",
+      "source_location": null,
+      "summary": "Track-focused dashboard that filters core topics and persists user-added custom topics per track in localStorage.",
+      "kind": "client_component"
+    },
+    {
+      "id": "learner_dev_app_shell",
+      "label": "LearnerDevAppShell",
+      "file_type": "code",
+      "source_file": "components/learner-dev-app-shell.jsx",
+      "source_location": null,
+      "summary": "Client-only dynamic wrapper around the richer LearnerDevApp experience.",
+      "kind": "client_shell"
+    },
+    {
+      "id": "learner_dev_app",
+      "label": "LearnerDevApp Component",
+      "file_type": "code",
+      "source_file": "components/learner-dev-app.jsx",
+      "source_location": null,
+      "summary": "A fuller workspace UI for lessons, practice, final test, theme switching, profile editing, and cloud sync.",
+      "kind": "client_component"
+    },
+    {
+      "id": "auth_panel",
+      "label": "AuthPanel Component",
+      "file_type": "code",
+      "source_file": "components/auth-panel.jsx",
+      "source_location": null,
+      "summary": "Reusable auth/profile card for email login, signup, sign-out, and profile entry points.",
+      "kind": "client_component"
+    },
+    {
+      "id": "hero_scene",
+      "label": "HeroScene Component",
+      "file_type": "code",
+      "source_file": "components/hero-scene.jsx",
+      "source_location": null,
+      "summary": "React Three Fiber scene that supplies the animated visual hero for the richer study workspace.",
+      "kind": "client_component"
+    },
+    {
+      "id": "practice_terminal",
+      "label": "PracticeTerminal Component",
+      "file_type": "code",
+      "source_file": "components/practice-terminal.jsx",
+      "source_location": null,
+      "summary": "Draft editor for simulated LWC bundle files or Apex class text, designed to surface review results.",
+      "kind": "client_component"
+    },
+    {
+      "id": "diagram_card",
+      "label": "DiagramCard Component",
+      "file_type": "code",
+      "source_file": "components/diagram-card.jsx",
+      "source_location": null,
+      "summary": "Track-specific SVG explainer for LWC bundle flow or Apex runtime flow.",
+      "kind": "client_component"
+    },
+    {
+      "id": "media_shelf",
+      "label": "MediaShelf Component",
+      "file_type": "code",
+      "source_file": "components/media-shelf.jsx",
+      "source_location": null,
+      "summary": "Renders external learning resources as typed cards.",
+      "kind": "client_component"
+    },
+    {
+      "id": "ai_review_lib",
+      "label": "Practice Review Engine",
+      "file_type": "code",
+      "source_file": "lib/ai-review.js",
+      "source_location": null,
+      "summary": "Applies rule-based structure checks for LWC or Apex submissions and provides starter correction templates.",
+      "kind": "server_lib"
+    },
+    {
+      "id": "recommendations_lib",
+      "label": "Recommendations Library",
+      "file_type": "code",
+      "source_file": "lib/recommendations.js",
+      "source_location": null,
+      "summary": "Defines prompt suggestion sets and curated official media links for LWC and Apex.",
+      "kind": "content_lib"
+    },
+    {
+      "id": "firebase_client",
+      "label": "Firebase Client Bootstrap",
+      "file_type": "code",
+      "source_file": "lib/firebase/client.js",
+      "source_location": null,
+      "summary": "Initializes Firebase app/auth/firestore when public env vars are present and exposes provider instances.",
+      "kind": "client_lib"
+    },
+    {
+      "id": "firebase_auth_service",
+      "label": "Firebase Auth",
+      "file_type": "concept",
+      "source_file": "lib/firebase/client.js",
+      "source_location": null,
+      "summary": "Backs email/password sign-in and auth state subscriptions.",
+      "kind": "external_service"
+    },
+    {
+      "id": "firestore_profiles",
+      "label": "Firestore Profiles Store",
+      "file_type": "concept",
+      "source_file": "components/learner-dev-app.jsx",
+      "source_location": null,
+      "summary": "Stores learner profile, theme, completion state, and practice notes by uid.",
+      "kind": "external_service"
+    },
+    {
+      "id": "local_browser_storage",
+      "label": "Browser Local Storage",
+      "file_type": "concept",
+      "source_file": "script.js",
+      "source_location": null,
+      "summary": "Persists theme, completion state, practice notes, and custom topics on the client.",
+      "kind": "browser_storage"
+    },
+    {
+      "id": "gemini_api",
+      "label": "Gemini GenerateContent API",
+      "file_type": "concept",
+      "source_file": "app/api/ai-feedback/route.js",
+      "source_location": null,
+      "summary": "Optional remote reviewer used when GEMINI_API_KEY is configured.",
+      "kind": "external_service"
+    },
+    {
+      "id": "upgrade_docs",
+      "label": "Upgrade and Migration Docs",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "summary": "Describes the migration from static HTML/JS to Next.js, Firebase-backed study flows, and AI-assisted practice.",
+      "kind": "documentation"
+    }
+  ],
+  "edges": [
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_applytheme",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2267",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_gettopicpool",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2274",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_getcurrenttopic",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2287",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_settab",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2291",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_rendersidebar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2308",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_getcompletionpercent",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2366",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_rendermain",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2372",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_renderlessonview",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2384",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_renderminiquiz",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2516",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_renderpracticelab",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2552",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_renderfinaltest",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2626",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_renderfinalmcq",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2668",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_renderfinalcodingprompts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2702",
+      "weight": 1.0
+    },
+    {
+      "source": "script_js",
+      "target": "learner_dev_script_escapehtml",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2728",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_settab",
+      "target": "learner_dev_script_rendersidebar",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2304",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_settab",
+      "target": "learner_dev_script_rendermain",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2305",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_rendersidebar",
+      "target": "learner_dev_script_gettopicpool",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2309",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_rendersidebar",
+      "target": "learner_dev_script_getcompletionpercent",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2321",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_rendermain",
+      "target": "learner_dev_script_renderpracticelab",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2374",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_rendermain",
+      "target": "learner_dev_script_renderfinaltest",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2378",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_rendermain",
+      "target": "learner_dev_script_renderlessonview",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2381",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_renderlessonview",
+      "target": "learner_dev_script_getcurrenttopic",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2385",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_renderlessonview",
+      "target": "learner_dev_script_getcompletionpercent",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2423",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_renderlessonview",
+      "target": "learner_dev_script_escapehtml",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2442",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_renderlessonview",
+      "target": "learner_dev_script_renderminiquiz",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2513",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_renderpracticelab",
+      "target": "learner_dev_script_getcurrenttopic",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2553",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_renderpracticelab",
+      "target": "learner_dev_script_escapehtml",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2582",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_renderfinaltest",
+      "target": "learner_dev_script_getcompletionpercent",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2636",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_renderfinaltest",
+      "target": "learner_dev_script_renderfinalmcq",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2664",
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_script_renderfinaltest",
+      "target": "learner_dev_script_renderfinalcodingprompts",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "script.js",
+      "source_location": "L2665",
+      "weight": 1.0
+    },
+    {
+      "source": "app_layout_js",
+      "target": "d_projects_git_learner_dev_app_globals_css",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\layout.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "app_layout_js",
+      "target": "app_layout_rootlayout",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\layout.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "app_page_js",
+      "target": "landing_page",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\page.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "app_page_js",
+      "target": "curriculum",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\page.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "app_page_js",
+      "target": "app_page_buildtrackstats",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\page.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "app_page_js",
+      "target": "app_page_page",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\page.js",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "app_page_page",
+      "target": "app_page_buildtrackstats",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\page.js",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "app_api_ai_feedback_route_js",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\ai-feedback\\route.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "app_api_ai_feedback_route_js",
+      "target": "ai_review",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\ai-feedback\\route.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "app_api_ai_feedback_route_js",
+      "target": "ai_feedback_route_fetchgeminifeedback",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\ai-feedback\\route.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "app_api_ai_feedback_route_js",
+      "target": "ai_feedback_route_post",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\ai-feedback\\route.js",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "ai_feedback_route_post",
+      "target": "ai_feedback_route_fetchgeminifeedback",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\ai-feedback\\route.js",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "app_api_tracks_track_route_js",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\tracks\\[track]\\route.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "app_api_tracks_track_route_js",
+      "target": "curriculum",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\tracks\\[track]\\route.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "app_api_tracks_track_route_js",
+      "target": "track_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\tracks\\[track]\\route.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "app_api_tracks_track_topicid_route_js",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\tracks\\[track]\\[topicId]\\route.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "app_api_tracks_track_topicid_route_js",
+      "target": "curriculum",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\tracks\\[track]\\[topicId]\\route.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "app_api_tracks_track_topicid_route_js",
+      "target": "topicid_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\api\\tracks\\[track]\\[topicId]\\route.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "app_dashboard_page_js",
+      "target": "topic_dashboard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\dashboard\\page.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "app_dashboard_page_js",
+      "target": "curriculum",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\dashboard\\page.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "app_dashboard_page_js",
+      "target": "dashboard_page_dashboardpage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\dashboard\\page.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "app_dashboard_track_page_js",
+      "target": "navigation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\dashboard\\[track]\\page.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "app_dashboard_track_page_js",
+      "target": "topic_dashboard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\dashboard\\[track]\\page.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "app_dashboard_track_page_js",
+      "target": "curriculum",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\dashboard\\[track]\\page.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "app_dashboard_track_page_js",
+      "target": "track_page_generatestaticparams",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\dashboard\\[track]\\page.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "app_dashboard_track_page_js",
+      "target": "track_page_trackdashboardpage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app\\dashboard\\[track]\\page.js",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "components_auth_panel_jsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\auth-panel.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_auth_panel_jsx",
+      "target": "components_auth_panel_authpanel",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\auth-panel.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "components_diagram_card_jsx",
+      "target": "components_diagram_card_diagramcard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\diagram-card.jsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "components_hero_scene_jsx",
+      "target": "fiber",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\hero-scene.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_hero_scene_jsx",
+      "target": "drei",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\hero-scene.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "components_hero_scene_jsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\hero-scene.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "components_hero_scene_jsx",
+      "target": "components_hero_scene_orbitalshapes",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\hero-scene.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "components_hero_scene_jsx",
+      "target": "components_hero_scene_heroscene",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\hero-scene.jsx",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "components_landing_page_jsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\landing-page.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_landing_page_jsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\landing-page.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "components_landing_page_jsx",
+      "target": "auth",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\landing-page.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "components_landing_page_jsx",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\landing-page.jsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "components_landing_page_jsx",
+      "target": "components_landing_page_landingpage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\landing-page.jsx",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_shell_jsx",
+      "target": "dynamic",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app-shell.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_shell_jsx",
+      "target": "components_learner_dev_app_shell_learnerdevappshell",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app-shell.jsx",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "auth",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "firestore",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "auth_panel",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "hero_scene",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "components_learner_dev_app_getstoredobject",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "components_learner_dev_app_getalltopics",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "components_learner_dev_app_gettopicpool",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "components_learner_dev_app_getcompletionpercent",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "components_learner_dev_app_getinitials",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_jsx",
+      "target": "components_learner_dev_app_learnerdevapp",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_gettopicpool",
+      "target": "components_learner_dev_app_getalltopics",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_learnerdevapp",
+      "target": "components_learner_dev_app_getinitials",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L832",
+      "weight": 1.0
+    },
+    {
+      "source": "components_media_shelf_jsx",
+      "target": "components_media_shelf_mediashelf",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\media-shelf.jsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "components_practice_terminal_jsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\practice-terminal.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_practice_terminal_jsx",
+      "target": "components_practice_terminal_practiceterminal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\practice-terminal.jsx",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "components_topic_dashboard_jsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\topic-dashboard.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_topic_dashboard_jsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\topic-dashboard.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "components_topic_dashboard_jsx",
+      "target": "components_topic_dashboard_getstoredtopics",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\topic-dashboard.jsx",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "components_topic_dashboard_jsx",
+      "target": "components_topic_dashboard_topicdashboard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components\\topic-dashboard.jsx",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_ai_review_js",
+      "target": "lib_ai_review_analyzelwc",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_ai_review_js",
+      "target": "lib_ai_review_analyzeapex",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_ai_review_js",
+      "target": "lib_ai_review_buildpracticereview",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_ai_review_js",
+      "target": "lib_ai_review_getfallbacktemplate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_ai_review_buildpracticereview",
+      "target": "lib_ai_review_analyzelwc",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_ai_review_buildpracticereview",
+      "target": "lib_ai_review_analyzeapex",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\ai-review.js",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_curriculum_js",
+      "target": "node_fs",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\curriculum.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_curriculum_js",
+      "target": "node_path",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\curriculum.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_curriculum_js",
+      "target": "node_vm",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\curriculum.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_curriculum_js",
+      "target": "lib_curriculum_loadlegacycurriculum",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\curriculum.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_firebase_client_js",
+      "target": "app",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\firebase\\client.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_firebase_client_js",
+      "target": "auth",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\firebase\\client.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_firebase_client_js",
+      "target": "firestore",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\firebase\\client.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_firebase_client_js",
+      "target": "firebase_client_ensurefirebaseready",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib\\firebase\\client.js",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "app_page_page",
+      "target": "lib_curriculum_loadlegacycurriculum",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app\\page.js",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "ai_feedback_route_post",
+      "target": "lib_ai_review_buildpracticereview",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app\\api\\ai-feedback\\route.js",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "ai_feedback_route_post",
+      "target": "lib_ai_review_getfallbacktemplate",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app\\api\\ai-feedback\\route.js",
+      "source_location": "L71",
+      "weight": 1.0
+    },
+    {
+      "source": "track_route_get",
+      "target": "lib_curriculum_loadlegacycurriculum",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app\\api\\tracks\\[track]\\route.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "topicid_route_get",
+      "target": "lib_curriculum_loadlegacycurriculum",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app\\api\\tracks\\[track]\\[topicId]\\route.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "dashboard_page_dashboardpage",
+      "target": "lib_curriculum_loadlegacycurriculum",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app\\dashboard\\page.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "track_page_trackdashboardpage",
+      "target": "lib_curriculum_loadlegacycurriculum",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app\\dashboard\\[track]\\page.js",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "components_landing_page_landingpage",
+      "target": "firebase_client_ensurefirebaseready",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "components\\landing-page.jsx",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_learnerdevapp",
+      "target": "firebase_client_ensurefirebaseready",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_learnerdevapp",
+      "target": "learner_dev_script_renderpracticelab",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L906",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_learnerdevapp",
+      "target": "learner_dev_script_renderfinaltest",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L906",
+      "weight": 1.0
+    },
+    {
+      "source": "components_learner_dev_app_learnerdevapp",
+      "target": "learner_dev_script_renderlessonview",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "components\\learner-dev-app.jsx",
+      "source_location": "L906",
+      "weight": 1.0
+    },
+    {
+      "source": "next_config",
+      "target": "firebase_client",
+      "relation": "optimizes_imports_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.89,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "root_layout",
+      "target": "landing_route",
+      "relation": "wraps",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.86,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "root_layout",
+      "target": "dashboard_index_route",
+      "relation": "wraps",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.86,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "root_layout",
+      "target": "dashboard_track_route",
+      "relation": "wraps",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.86,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "legacy_static_app",
+      "target": "legacy_curriculum_data",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.98,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "curriculum_loader",
+      "target": "legacy_curriculum_data",
+      "relation": "extracts_from_script_via_vm",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.98,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "landing_route",
+      "target": "curriculum_loader",
+      "relation": "loads_curriculum_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.98,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "landing_route",
+      "target": "landing_page",
+      "relation": "renders",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.98,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "dashboard_index_route",
+      "target": "curriculum_loader",
+      "relation": "loads_curriculum_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.97,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "dashboard_index_route",
+      "target": "topic_dashboard",
+      "relation": "renders_default_track_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.96,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "dashboard_track_route",
+      "target": "curriculum_loader",
+      "relation": "loads_curriculum_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.97,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "dashboard_track_route",
+      "target": "topic_dashboard",
+      "relation": "renders_validated_track_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.96,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "track_collection_api",
+      "target": "curriculum_loader",
+      "relation": "loads_curriculum_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.97,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "track_collection_api",
+      "target": "legacy_curriculum_data",
+      "relation": "exposes_track_summaries_from",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.91,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "topic_detail_api",
+      "target": "curriculum_loader",
+      "relation": "loads_curriculum_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.97,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "topic_detail_api",
+      "target": "legacy_curriculum_data",
+      "relation": "exposes_full_topic_from",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.91,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "ai_feedback_api",
+      "target": "ai_review_lib",
+      "relation": "uses_local_validation_from",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.98,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "ai_feedback_api",
+      "target": "gemini_api",
+      "relation": "optionally_calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "landing_page",
+      "target": "firebase_client",
+      "relation": "checks_readiness_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.93,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "landing_page",
+      "target": "firebase_auth_service",
+      "relation": "authenticates_email_users_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "landing_page",
+      "target": "dashboard_index_route",
+      "relation": "links_users_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.93,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "topic_dashboard",
+      "target": "local_browser_storage",
+      "relation": "persists_custom_topics_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.96,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_app_shell",
+      "target": "learner_dev_app",
+      "relation": "dynamically_imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.99,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_app",
+      "target": "auth_panel",
+      "relation": "composes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.99,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_app",
+      "target": "hero_scene",
+      "relation": "composes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.99,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_app",
+      "target": "firebase_client",
+      "relation": "uses_auth_and_firestore_from",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.97,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_app",
+      "target": "firebase_auth_service",
+      "relation": "subscribes_and_updates_profile_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_app",
+      "target": "firestore_profiles",
+      "relation": "syncs_profile_progress_notes_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.96,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "learner_dev_app",
+      "target": "local_browser_storage",
+      "relation": "mirrors_theme_progress_notes_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.96,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "practice_terminal",
+      "target": "ai_feedback_api",
+      "relation": "submits_drafts_for_review_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.84,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "practice_terminal",
+      "target": "ai_review_lib",
+      "relation": "expects_review_payload_shape_from",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "recommendations_lib",
+      "target": "media_shelf",
+      "relation": "supplies_link_items_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.74,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "recommendations_lib",
+      "target": "practice_terminal",
+      "relation": "could_seed_prompt_suggestions_for",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.46,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "media_shelf",
+      "target": "landing_page",
+      "relation": "appears_designed_for_media_sections_in",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.55,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "upgrade_docs",
+      "target": "legacy_static_app",
+      "relation": "documents_migration_from",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.9,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "upgrade_docs",
+      "target": "curriculum_loader",
+      "relation": "states_next_app_reuses_scriptjs_content_via",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.89,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "upgrade_docs",
+      "target": "learner_dev_app",
+      "relation": "describes_feature_set_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.72,
+      "source_file": "semantic",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "curriculum_reuse_flow",
+      "label": "data_flow",
+      "nodes": [
+        "legacy_static_app",
+        "legacy_curriculum_data",
+        "curriculum_loader",
+        "landing_route",
+        "dashboard_index_route",
+        "dashboard_track_route",
+        "track_collection_api",
+        "topic_detail_api"
+      ],
+      "relation": "data_flow",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.96,
+      "source_file": "semantic"
+    },
+    {
+      "id": "landing_auth_flow",
+      "label": "auth_flow",
+      "nodes": [
+        "landing_page",
+        "firebase_client",
+        "firebase_auth_service",
+        "dashboard_index_route"
+      ],
+      "relation": "auth_flow",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.94,
+      "source_file": "semantic"
+    },
+    {
+      "id": "dashboard_customization_flow",
+      "label": "persistence_flow",
+      "nodes": [
+        "dashboard_index_route",
+        "dashboard_track_route",
+        "topic_dashboard",
+        "local_browser_storage"
+      ],
+      "relation": "persistence_flow",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "semantic"
+    },
+    {
+      "id": "ai_feedback_pipeline",
+      "label": "review_flow",
+      "nodes": [
+        "practice_terminal",
+        "ai_feedback_api",
+        "ai_review_lib",
+        "gemini_api"
+      ],
+      "relation": "review_flow",
+      "confidence": "INFERRED",
+      "confidence_score": 0.86,
+      "source_file": "semantic"
+    },
+    {
+      "id": "workspace_sync_flow",
+      "label": "workspace_flow",
+      "nodes": [
+        "learner_dev_app_shell",
+        "learner_dev_app",
+        "auth_panel",
+        "hero_scene",
+        "firebase_client",
+        "firebase_auth_service",
+        "firestore_profiles",
+        "local_browser_storage"
+      ],
+      "relation": "workspace_flow",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.93,
+      "source_file": "semantic"
+    },
+    {
+      "id": "staged_media_resource_layer",
+      "label": "feature_cluster",
+      "nodes": [
+        "recommendations_lib",
+        "media_shelf",
+        "diagram_card",
+        "landing_page",
+        "learner_dev_app"
+      ],
+      "relation": "feature_cluster",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.63,
+      "source_file": "semantic"
+    }
+  ],
+  "input_tokens": 48838,
+  "output_tokens": 4521
+}
