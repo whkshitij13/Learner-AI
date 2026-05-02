@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, OrbitControls, Stars } from "@react-three/drei";
+import { Float, MeshDistortMaterial, Stars } from "@react-three/drei";
 import { useRef } from "react";
 
 function OrbitalShapes() {
@@ -45,7 +45,11 @@ function OrbitalShapes() {
 export default function HeroScene() {
   return (
     <div className="hero-scene-shell" aria-hidden="true">
-      <Canvas camera={{ position: [0, 0, 5.8], fov: 42 }}>
+      <Canvas
+        camera={{ position: [0, 0, 5.8], fov: 42 }}
+        gl={{ alpha: false, antialias: true, powerPreference: "high-performance" }}
+        style={{ height: "100%", pointerEvents: "none", width: "100%" }}
+      >
         <color attach="background" args={["#0a1020"]} />
         <fog attach="fog" args={["#0a1020", 4, 12]} />
         <ambientLight intensity={1.2} />
@@ -53,7 +57,6 @@ export default function HeroScene() {
         <pointLight color="#76ffe0" intensity={18} position={[-3, -2, 2]} />
         <Stars radius={70} depth={28} count={1800} factor={3} saturation={0} fade speed={0.5} />
         <OrbitalShapes />
-        <OrbitControls autoRotate autoRotateSpeed={1.8} enablePan={false} enableZoom={false} />
       </Canvas>
     </div>
   );

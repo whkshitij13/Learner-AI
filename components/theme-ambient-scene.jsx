@@ -146,7 +146,12 @@ export default function ThemeAmbientScene() {
 
   return (
     <div className="theme-ambient-scene" aria-hidden="true">
-      <Canvas camera={{ position: [0, 0, 5.2], fov: 48 }} dpr={[1, 1.5]}>
+      <Canvas
+        camera={{ position: [0, 0, 5.2], fov: 48 }}
+        dpr={[1, 1.5]}
+        gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+        style={{ height: "100%", pointerEvents: "none", width: "100%" }}
+      >
         <ambientLight intensity={0.9} />
         <directionalLight color={scene.color} intensity={1.1} position={[3, 4, 4]} />
         <pointLight color={scene.accent} intensity={5.4} position={[-3, -2, 2]} />

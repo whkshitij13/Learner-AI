@@ -1,6 +1,5 @@
-import TopicDashboard from "@/components/topic-dashboard";
-import { EMPTY_CURRICULUM } from "@/lib/dashboard-seed";
+import DashboardHome from "@/components/dashboard-home";
 
 export default function DashboardPage() {
-  return <TopicDashboard curriculum={EMPTY_CURRICULUM} activeTrack="workspace" />;
+  return <DashboardHome />;
 }

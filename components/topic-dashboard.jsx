@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import DiagramCard from "@/components/diagram-card";
 import MediaShelf from "@/components/media-shelf";
 import PracticeTerminal from "@/components/practice-terminal";
 import StudyHeader from "@/components/study-header";
@@ -12,7 +11,7 @@ import { auth, db } from "@/lib/firebase/client";
 import { getUserDashboardState, logUserQuery, saveUserTrackState } from "@/lib/dashboard-store";
 import { getSuggestionsForInterests, INTEREST_OPTIONS, recommendThemePreset } from "@/lib/personalization";
 import { ensureUserProfile, saveUserProfilePreferences } from "@/lib/profile-store";
-import { MEDIA_LIBRARY, PROMPT_LIBRARY } from "@/lib/recommendations";
+import { PROMPT_LIBRARY } from "@/lib/recommendations";
 
 const TRACK_CONFIG = {
   workspace: {
@@ -44,19 +43,45 @@ const LOADING_MESSAGES = [
   "Turning the topic into a scrollable study card..."
 ];
 
-const DEFAULT_FILES = {
+const DEFAULT_TERMINAL_CONFIGS = {
   workspace: {
-    html: "<section class=\"practice-card\">\n  <h1>Start building</h1>\n  <p>Use this space to test the idea you are learning.</p>\n</section>",
-    js: "const topicTitle = 'Practice topic';\n\nconsole.log(`Exploring ${topicTitle}`);",
-    css: "body {\n  font-family: Arial, sans-serif;\n}\n\n.practice-card {\n  padding: 16px;\n}"
+    language: "javascript",
+    compiler: "node",
+    title: "JavaScript practice space",
+    description: "Gemini matched this topic to a JavaScript-friendly terminal.",
+    files: [
+      { id: "index.js", label: "index.js", placeholder: "Write JavaScript here...", starter: "console.log('Practice ready');" }
+    ]
   },
   lwc: {
-    html: "<section class=\"practice-card\">\n  <h1>Start building</h1>\n  <p>Use this space to test the idea you are learning.</p>\n</section>",
-    js: "const topicTitle = 'Practice topic';\n\nconsole.log(`Exploring ${topicTitle}`);",
-    css: "body {\n  font-family: Arial, sans-serif;\n}\n\n.practice-card {\n  padding: 16px;\n}"
+    language: "lwc",
+    compiler: "LWC bundle",
+    title: "LWC practice space",
+    description: "Component bundle for Lightning Web Components.",
+    files: [
+      { id: "html", label: "component.html", placeholder: "Write template markup here...", starter: "<template>\n  <p>Practice ready</p>\n</template>" },
+      {
+        id: "js",
+        label: "component.js",
+        placeholder: "Write component logic here...",
+        starter: "import { LightningElement } from 'lwc';\n\nexport default class PracticeComponent extends LightningElement {}"
+      },
+      { id: "css", label: "component.css", placeholder: "Write component styles here...", starter: ":host {\n  display: block;\n}" }
+    ]
   },
   apex: {
-    class: "public with sharing class PracticeController {\n  public static void run() {\n    System.debug('Start here');\n  }\n}"
+    language: "apex",
+    compiler: "Apex review",
+    title: "Apex practice space",
+    description: "Salesforce Apex class and test review.",
+    files: [
+      {
+        id: "class",
+        label: "PracticeController.cls",
+        placeholder: "Write an Apex class or test here...",
+        starter: "public with sharing class PracticeController {\n  public static void run() {\n    System.debug('Practice ready');\n  }\n}"
+      }
+    ]
   }
 };
 
@@ -110,7 +135,7 @@ export function normalizeTopic(topic, activeTrack) {
     mockPrompts: topic.mockPrompts || [],
     assessments: assessmentLevels,
     scenarios: topic.scenarios || [],
-    media: topic.media || [],
+    media: (topic.media || []).map(normalizeMediaItem).filter(Boolean),
     capabilities: {
       quizEnabled:
         typeof topic.capabilities?.quizEnabled === "boolean"
@@ -127,7 +152,10 @@ export function normalizeTopic(topic, activeTrack) {
               assessmentLevels.beginner?.mockPrompts?.length ||
                 assessmentLevels.intermediate?.mockPrompts?.length ||
                 assessmentLevels.advanced?.mockPrompts?.length
-            )
+            ),
+      terminalLanguage: topic.capabilities?.terminalLanguage || "",
+      terminalFiles: Array.isArray(topic.capabilities?.terminalFiles) ? topic.capabilities.terminalFiles : [],
+      compiler: topic.capabilities?.compiler || ""
     }
   };
 }
@@ -139,8 +167,77 @@ export function slugifyTopicTitle(value) {
     .replace(/^-|-$/g, "");
 }
 
+function normalizeSearchText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+// function normalizeSearchText(value) {
+//   return String(value || "")
+//     .toLowerCase()
+//     .replace(/[^a-z0-9]+/g, " ")
+//     .trim();
+// }
+
 function isPlayablePreviewVideo(value) {
   return /^https?:\/\/.+\.(mp4|webm|ogg|m3u8)(\?.*)?$/i.test(String(value || "").trim());
+}
+
+function isSafeHttpUrl(value) {
+  try {
+    const url = new URL(String(value || "").trim());
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+function isPlaceholderDomain(value) {
+  try {
+    const hostname = new URL(String(value || "").trim()).hostname.replace(/^www\./, "").toLowerCase();
+
+    return (
+      hostname === "example.com" ||
+      hostname === "example.org" ||
+      hostname === "example.net" ||
+      hostname === "placehold.co" ||
+      hostname === "via.placeholder.com"
+    );
+  } catch {
+    return false;
+  }
+}
+
+function normalizeMediaItem(item, index) {
+  const rawType = String(item?.type || "Article").trim();
+  const type = rawType.toLowerCase() === "image" ? "Photo" : rawType;
+  const href = isSafeHttpUrl(item?.href) && !isPlaceholderDomain(item?.href) ? String(item.href).trim() : "";
+  const image = isSafeHttpUrl(item?.image) && !isPlaceholderDomain(item?.image) ? String(item.image).trim() : "";
+  const previewVideo =
+    isPlayablePreviewVideo(item?.previewVideo) && !isPlaceholderDomain(item?.previewVideo) ? String(item.previewVideo).trim() : "";
+  const audio = isSafeHttpUrl(item?.audio) && !isPlaceholderDomain(item?.audio) ? String(item.audio).trim() : "";
+  const source = String(item?.source || "").trim().toLowerCase();
+
+  if (source === "fallback" || source === "demo" || source === "placeholder") {
+    return null;
+  }
+
+  if (!href && !image && !previewVideo && !audio) {
+    return null;
+  }
+
+  return {
+    type,
+    title: String(item?.title || `${type} resource ${index + 1}`).trim(),
+    description: String(item?.description || "Open this related learning resource.").trim(),
+    href,
+    image,
+    previewVideo,
+    audio,
+    source: String(item?.source || "").trim()
+  };
 }
 
 function isVideoMediaItem(item) {
@@ -162,6 +259,116 @@ function isPhotoMediaItem(item) {
   return Boolean(item?.image && !isVideoMediaItem(item) && !type.includes("podcast") && !type.includes("audio"));
 }
 
+function isPodcastMediaItem(item) {
+  const type = String(item?.type || "").toLowerCase();
+  const href = String(item?.href || "").toLowerCase();
+
+  return type.includes("podcast") || type.includes("audio") || /\.(mp3|wav|ogg|m4a)(\?.*)?$/i.test(href);
+}
+
+function isArticleMediaItem(item) {
+  const type = String(item?.type || "").toLowerCase();
+
+  return (
+    !isVideoMediaItem(item) &&
+    !isPhotoMediaItem(item) &&
+    !isPodcastMediaItem(item) &&
+    (type.includes("article") || type.includes("guide") || type.includes("reading") || Boolean(item?.href))
+  );
+}
+
+function inferTerminalConfig(topic, activeTrack) {
+  const fallback = DEFAULT_TERMINAL_CONFIGS[activeTrack] || DEFAULT_TERMINAL_CONFIGS.workspace;
+  const capabilityLanguage = String(topic?.capabilities?.terminalLanguage || "").toLowerCase();
+  const compiler = String(topic?.capabilities?.compiler || "").trim();
+  const starter = String(topic?.exercise?.starter || "").trim();
+  const sourceText = `${topic?.title || ""} ${topic?.focus || ""} ${starter}`.toLowerCase();
+  let language = capabilityLanguage;
+
+  if (!language) {
+    if (activeTrack === "lwc" || /lightningelement|lwc|<template>/.test(sourceText)) {
+      language = "lwc";
+    } else if (activeTrack === "apex" || /system\.debug|with sharing|@istest/.test(sourceText)) {
+      language = "apex";
+    } else {
+      const patterns = [
+        { language: "cpp", test: /#include|std::|cout|cin|c\+\+/ },
+        { language: "java", test: /public class|system\.out\.println|javac|public static void main/ },
+        { language: "python", test: /def |print\(|__name__ == "__main__"|python/ },
+        { language: "typescript", test: /typescript|interface |type |ts-node/ },
+        { language: "javascript", test: /javascript|node|console\.log|=>|npm/ },
+        { language: "go", test: /package main|fmt\.print|go run/ },
+        { language: "rust", test: /fn main|println!|cargo|rustc/ },
+        { language: "csharp", test: /using system;|console\.writeline|dotnet|namespace/ },
+        { language: "php", test: /<\?php|echo |composer|php / },
+        { language: "ruby", test: /puts |def |end|ruby / },
+        { language: "kotlin", test: /fun main|println\(|kotlinc/ },
+        { language: "swift", test: /import swift|print\(|swiftc/ }
+      ];
+
+      language = patterns.find((item) => item.test.test(sourceText))?.language || fallback.language;
+    }
+  }
+
+  const topicFiles = Array.isArray(topic?.capabilities?.terminalFiles) ? topic.capabilities.terminalFiles : [];
+
+  if (language === "lwc") {
+    return {
+      ...DEFAULT_TERMINAL_CONFIGS.lwc,
+      compiler: compiler || DEFAULT_TERMINAL_CONFIGS.lwc.compiler,
+      files: DEFAULT_TERMINAL_CONFIGS.lwc.files.map((file) => ({
+        ...file,
+        starter: topicFiles.find((item) => item.id === file.id)?.starter || file.starter
+      }))
+    };
+  }
+
+  if (language === "apex") {
+    return {
+      ...DEFAULT_TERMINAL_CONFIGS.apex,
+      compiler: compiler || DEFAULT_TERMINAL_CONFIGS.apex.compiler,
+      files: [
+        {
+          ...DEFAULT_TERMINAL_CONFIGS.apex.files[0],
+          starter: topicFiles[0]?.starter || starter || DEFAULT_TERMINAL_CONFIGS.apex.files[0].starter
+        }
+      ]
+    };
+  }
+
+  const singleFileMap = {
+    cpp: { compiler: "g++", label: "main.cpp", placeholder: "Write C++ here..." },
+    java: { compiler: "javac", label: "Main.java", placeholder: "Write Java here..." },
+    python: { compiler: "python", label: "main.py", placeholder: "Write Python here..." },
+    typescript: { compiler: "ts-node", label: "main.ts", placeholder: "Write TypeScript here..." },
+    javascript: { compiler: "node", label: "index.js", placeholder: "Write JavaScript here..." },
+    go: { compiler: "go run", label: "main.go", placeholder: "Write Go here..." },
+    rust: { compiler: "cargo", label: "main.rs", placeholder: "Write Rust here..." },
+    csharp: { compiler: "dotnet", label: "Program.cs", placeholder: "Write C# here..." },
+    php: { compiler: "php", label: "index.php", placeholder: "Write PHP here..." },
+    ruby: { compiler: "ruby", label: "main.rb", placeholder: "Write Ruby here..." },
+    kotlin: { compiler: "kotlinc", label: "Main.kt", placeholder: "Write Kotlin here..." },
+    swift: { compiler: "swiftc", label: "main.swift", placeholder: "Write Swift here..." }
+  };
+
+  const single = singleFileMap[language] || { compiler: compiler || language || "Gemini", label: "main.txt", placeholder: "Write code here..." };
+
+  return {
+    language,
+    compiler: compiler || single.compiler,
+    title: `${language.toUpperCase()} practice space`,
+    description: `Gemini recognized this topic as ${language.toUpperCase()}-focused and matched the terminal to that language.`,
+    files: [
+      {
+        id: single.label,
+        label: single.label,
+        placeholder: single.placeholder,
+        starter: topicFiles[0]?.starter || starter || ""
+      }
+    ]
+  };
+}
+
 export default function TopicDashboard({ curriculum, activeTrack }) {
   const router = useRouter();
   const [user, setUser] = useState(null);
@@ -176,10 +383,6 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
   const [draft, setDraft] = useState({ title: "", focus: "", level: "Custom" });
   const [activePanel, setActivePanel] = useState("learn");
   const [terminalOpen, setTerminalOpen] = useState(false);
-  const isApexTrack = activeTrack === "apex";
-  const defaultDraftFiles = DEFAULT_FILES[activeTrack] || DEFAULT_FILES.workspace;
-  const [activeFile, setActiveFile] = useState(isApexTrack ? "class" : "html");
-  const [drafts, setDrafts] = useState(defaultDraftFiles);
   const [review, setReview] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [topicQuizAnswers, setTopicQuizAnswers] = useState({});
@@ -189,6 +392,9 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [isGeneratingTopic, setIsGeneratingTopic] = useState(false);
   const [generationError, setGenerationError] = useState("");
+  const [pendingBranchPrompt, setPendingBranchPrompt] = useState("");
+  const [selectedSidebarSubtopicId, setSelectedSidebarSubtopicId] = useState("");
+  const [terminalSessions, setTerminalSessions] = useState({});
   const hasLoadedTrackState = useRef(false);
   const shouldAutoScrollToTopicRef = useRef(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
@@ -234,11 +440,11 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
     setProgressByTopic({});
     setExpandedSidebarTopicId("");
     setAssessmentLevel("beginner");
-    setActiveFile(activeTrack === "apex" ? "class" : "html");
-    setDrafts(DEFAULT_FILES[activeTrack] || DEFAULT_FILES.workspace);
+    setTerminalSessions({});
     setReview(null);
     setMockResult(null);
     setActivePanel("learn");
+    setSelectedSidebarSubtopicId("");
   }, [activeTrack]);
 
   useEffect(() => {
@@ -414,18 +620,47 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
   }, []);
 
   const currentConfig = TRACK_CONFIG[activeTrack] || TRACK_CONFIG.workspace;
-  const fallbackMediaItems = MEDIA_LIBRARY[activeTrack] || [];
   const prompts = [...PROMPT_LIBRARY.beginner, ...PROMPT_LIBRARY["project-builder"]].slice(0, 4);
   const mockPrompts = getTrackPrompts(curriculum.finalTest, activeTrack);
   const normalizedCurrentTopic = normalizeTopic(currentTopic, activeTrack);
-  const mediaItems = normalizedCurrentTopic?.media?.length ? normalizedCurrentTopic.media : fallbackMediaItems;
+  const mediaItems = normalizedCurrentTopic?.media || [];
   const videoMediaItems = mediaItems.filter((item) => isVideoMediaItem(item));
   const photoMediaItems = mediaItems.filter((item) => isPhotoMediaItem(item));
+  const articleMediaItems = mediaItems.filter((item) => isArticleMediaItem(item));
+  const podcastMediaItems = mediaItems.filter((item) => isPodcastMediaItem(item));
   const topicCapabilities = normalizedCurrentTopic?.capabilities || {
     quizEnabled: false,
     terminalEnabled: false,
-    mockEnabled: false
+    mockEnabled: false,
+    terminalLanguage: "",
+    terminalFiles: [],
+    compiler: ""
   };
+  const terminalConfig = useMemo(
+    () =>
+      normalizedCurrentTopic
+        ? inferTerminalConfig(normalizedCurrentTopic, activeTrack)
+        : DEFAULT_TERMINAL_CONFIGS[activeTrack] || DEFAULT_TERMINAL_CONFIGS.workspace,
+    [activeTrack, normalizedCurrentTopic]
+  );
+  const currentTerminalSession = useMemo(() => {
+    if (!normalizedCurrentTopic?.id) {
+      return null;
+    }
+
+    const existingSession = terminalSessions[normalizedCurrentTopic.id];
+
+    if (existingSession) {
+      return existingSession;
+    }
+
+    return {
+      activeFile: terminalConfig.files[0]?.id || "",
+      drafts: Object.fromEntries(terminalConfig.files.map((file) => [file.id, file.starter || ""]))
+    };
+  }, [normalizedCurrentTopic?.id, terminalConfig.files, terminalSessions]);
+  const activeFile = currentTerminalSession?.activeFile || terminalConfig.files[0]?.id || "";
+  const drafts = currentTerminalSession?.drafts || {};
   const isTechnicalTopic = Boolean(topicCapabilities.terminalEnabled);
   const branchTopics = normalizedCurrentTopic?.branchTopics?.length
     ? normalizedCurrentTopic.branchTopics
@@ -448,6 +683,11 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
     : 0;
   const interestSuggestions = getSuggestionsForInterests(selectedInterests, SUGGESTED_PROMPTS);
   const visiblePanels = ["learn"];
+  const composerButtonLabel = isGeneratingTopic
+    ? "Generating..."
+    : pendingBranchPrompt
+      ? "Generate selected subtopic"
+      : "Generate topic";
 
   if (topicCapabilities.quizEnabled) {
     visiblePanels.push("practice");
@@ -461,7 +701,9 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
     { id: "subtopics", label: "Subtopics", visible: subtopicCards.length > 0 },
     { id: "key-terms", label: "Key terms", visible: normalizedCurrentTopic?.keyTerms?.length > 0 },
     { id: "videos", label: "Videos", visible: videoMediaItems.length > 0 },
-    { id: "photos", label: "Photos", visible: photoMediaItems.length > 0 }
+    { id: "photos", label: "Photos", visible: photoMediaItems.length > 0 },
+    { id: "articles", label: "Articles", visible: articleMediaItems.length > 0 },
+    { id: "podcasts", label: "Podcasts", visible: podcastMediaItems.length > 0 }
   ].filter((item) => item.visible);
 
   useEffect(() => {
@@ -557,10 +799,48 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
   }
 
   function updateDraft(fileId, value) {
-    setDrafts((current) => ({
-      ...current,
-      [fileId]: value
-    }));
+    if (!normalizedCurrentTopic?.id) {
+      return;
+    }
+
+    setTerminalSessions((current) => {
+      const currentSession = current[normalizedCurrentTopic.id] || {
+        activeFile: terminalConfig.files[0]?.id || fileId,
+        drafts: Object.fromEntries(terminalConfig.files.map((file) => [file.id, file.starter || ""]))
+      };
+
+      return {
+        ...current,
+        [normalizedCurrentTopic.id]: {
+          ...currentSession,
+          drafts: {
+            ...currentSession.drafts,
+            [fileId]: value
+          }
+        }
+      };
+    });
+  }
+
+  function changeActiveTerminalFile(fileId) {
+    if (!normalizedCurrentTopic?.id) {
+      return;
+    }
+
+    setTerminalSessions((current) => {
+      const currentSession = current[normalizedCurrentTopic.id] || {
+        activeFile: terminalConfig.files[0]?.id || fileId,
+        drafts: Object.fromEntries(terminalConfig.files.map((file) => [file.id, file.starter || ""]))
+      };
+
+      return {
+        ...current,
+        [normalizedCurrentTopic.id]: {
+          ...currentSession,
+          activeFile: fileId
+        }
+      };
+    });
   }
 
   async function analyzePractice() {
@@ -575,6 +855,7 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
         },
         body: JSON.stringify({
           track: activeTrack,
+          language: terminalConfig.language,
           topicTitle: currentTopic?.title,
           files: drafts
         })
@@ -673,6 +954,33 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
   function handleSidebarTopicSelect(topicId) {
     setSelectedTopicId(topicId);
     setExpandedSidebarTopicId((current) => (current === topicId ? "" : topicId));
+    setSelectedSidebarSubtopicId("");
+  }
+
+  function focusTopicComposer() {
+    const composer = document.getElementById("topicPromptComposer");
+
+    if (composer) {
+      composer.scrollIntoView({ behavior: "smooth", block: "center" });
+      window.setTimeout(() => composer.focus(), 180);
+    }
+  }
+
+  function findExistingTopicForPrompt(promptText) {
+    const normalizedPrompt = normalizeSearchText(promptText);
+
+    if (!normalizedPrompt) {
+      return null;
+    }
+
+    const allTopics = [...customTopics, ...trackTopics];
+
+    return (
+      allTopics.find((topic) => normalizeSearchText(topic.title) === normalizedPrompt) ||
+      allTopics.find((topic) => normalizeSearchText(topic.focus) === normalizedPrompt) ||
+      allTopics.find((topic) => normalizeSearchText(`${topic.title} ${topic.focus}`).includes(normalizedPrompt)) ||
+      null
+    );
   }
 
   function deleteSavedTopic(event, topicId) {
@@ -684,6 +992,11 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
       const nextProgress = { ...current };
       delete nextProgress[topicId];
       return nextProgress;
+    });
+    setTerminalSessions((current) => {
+      const nextSessions = { ...current };
+      delete nextSessions[topicId];
+      return nextSessions;
     });
 
     if (selectedTopicId === topicId) {
@@ -701,15 +1014,60 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
     }
   }
 
-  function openBranchTopic(branch) {
+  function regenerateTopicFromSidebar(event, topic) {
+    event.stopPropagation();
+
+    if (!topic) {
+      return;
+    }
+
+    const prompt = topic.title || topic.focus || "";
+    setSelectedTopicId(topic.id);
+    setExpandedSidebarTopicId(topic.id);
+    setTopicPrompt(prompt);
+    setPendingBranchPrompt("");
+    shouldAutoScrollToTopicRef.current = true;
+    generateTopic(prompt);
+  }
+
+  function openBranchTopic(branch, options = {}) {
     if (!branch) {
       return;
     }
 
     const scopedQuery = normalizedCurrentTopic?.title ? `${normalizedCurrentTopic.title} ${branch}` : branch;
+    const existingTopic = findExistingTopicForPrompt(scopedQuery) || findExistingTopicForPrompt(branch);
+
+    if (!options.forceGenerate && existingTopic) {
+      setSelectedTopicId(existingTopic.id);
+      setExpandedSidebarTopicId(existingTopic.id);
+      setPendingBranchPrompt("");
+      setGenerationError("");
+      setActivePanel("learn");
+      shouldAutoScrollToTopicRef.current = true;
+      return;
+    }
+
+    if (options.forceGenerate) {
+      setPendingBranchPrompt("");
+      shouldAutoScrollToTopicRef.current = true;
+      generateTopic(scopedQuery);
+      return;
+    }
+
     setTopicPrompt(scopedQuery);
-    shouldAutoScrollToTopicRef.current = true;
-    generateTopic(scopedQuery);
+    setPendingBranchPrompt(scopedQuery);
+    setGenerationError("");
+    focusTopicComposer();
+  }
+
+  function handleSidebarSubtopicSelect(subtopic, options = {}) {
+    if (!subtopic) {
+      return;
+    }
+
+    setSelectedSidebarSubtopicId(subtopic.id || "");
+    openBranchTopic(subtopic.title || subtopic, options);
   }
 
   function openTopicReader() {
@@ -773,6 +1131,7 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
 
     setIsGeneratingTopic(true);
     setGenerationError("");
+    setPendingBranchPrompt("");
 
     try {
       if (user && db) {
@@ -996,17 +1355,28 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                                 ▾
                               </span>
                             </button>
-                              {canDeleteTopic ? (
+                              <div className="sidebar-topic-actions">
                                 <button
-                                  aria-label={`Delete ${topic.title}`}
-                                  className="sidebar-topic-delete"
-                                  onClick={(event) => deleteSavedTopic(event, topic.id)}
-                                  title="Delete from history"
+                                  aria-label={`Generate ${topic.title} again`}
+                                  className="sidebar-topic-refresh"
+                                  onClick={(event) => regenerateTopicFromSidebar(event, topic)}
+                                  title="Generate again"
                                   type="button"
                                 >
-                                  x
+                                  ↻
                                 </button>
-                              ) : null}
+                                {canDeleteTopic ? (
+                                  <button
+                                    aria-label={`Delete ${topic.title}`}
+                                    className="sidebar-topic-delete"
+                                    onClick={(event) => deleteSavedTopic(event, topic.id)}
+                                    title="Delete from history"
+                                    type="button"
+                                  >
+                                    x
+                                  </button>
+                                ) : null}
+                              </div>
                             </div>
 
                             {expandedSidebarTopicId === topic.id ? (
@@ -1014,8 +1384,11 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                                 {sidebarSubtopics.length ? (
                                   <div className="sidebar-subtopic-list">
                                     {sidebarSubtopics.map((item) => (
-                                      <article className="sidebar-subtopic-card" key={item.id}>
-                                        <button className="sidebar-subtopic-button" onClick={() => openBranchTopic(item.title)} type="button">
+                                      <article
+                                        className={`sidebar-subtopic-card ${selectedSidebarSubtopicId === item.id ? "active" : ""}`}
+                                        key={item.id}
+                                      >
+                                        <button className="sidebar-subtopic-button" onClick={() => handleSidebarSubtopicSelect(item)} type="button">
                                           <strong>{item.title}</strong>
                                           <span>{item.summary}</span>
                                         </button>
@@ -1024,6 +1397,7 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                                             sidebarTopicProgress.completedSubtopics.includes(item.id) ? "active" : ""
                                           }`}
                                           onClick={() => toggleSubtopicCompletion(item.id)}
+                                          title={sidebarTopicProgress.completedSubtopics.includes(item.id) ? "Done" : "Mark done"}
                                           type="button"
                                         >
                                           {sidebarTopicProgress.completedSubtopics.includes(item.id) ? "Done" : "Mark done"}
@@ -1076,13 +1450,20 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                 <div className="ai-composer-box">
                   <textarea
                     className="dashboard-input dashboard-textarea topic-prompt-input"
-                    onChange={(event) => setTopicPrompt(event.target.value)}
+                    id="topicPromptComposer"
+                    onChange={(event) => {
+                      setTopicPrompt(event.target.value);
+                      if (pendingBranchPrompt) {
+                        setPendingBranchPrompt("");
+                      }
+                    }}
                     placeholder="Ask something like: Build a complete study card for travel planning in Japan..."
                     value={topicPrompt}
                   />
                   <div className="ai-composer-actions">
-                    <button className="button" onClick={() => generateTopic()} type="button">
-                      {isGeneratingTopic ? "Generating..." : "Generate topic"}
+                    {pendingBranchPrompt ? <span className="pill">Subtopic ready</span> : null}
+                    <button className="button" onClick={() => generateTopic(pendingBranchPrompt || topicPrompt)} type="button">
+                      {composerButtonLabel}
                     </button>
                     {generationError ? <p className="error-line">{generationError}</p> : null}
                   </div>
@@ -1369,14 +1750,6 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                       </div>
                     </article>
 
-                    {isTechnicalTopic ? (
-                      <article className="glass-card study-card study-card-wide">
-                        <span className="eyebrow">Diagram</span>
-                        <h3>Visual help</h3>
-                        <DiagramCard track={activeTrack} />
-                      </article>
-                    ) : null}
-
                     {videoMediaItems.length ? (
                       <article className="glass-card study-card study-card-wide media-section-card" id="videos">
                         <span className="eyebrow">Videos</span>
@@ -1393,7 +1766,23 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                       </article>
                     ) : null}
 
-                    {!videoMediaItems.length && !photoMediaItems.length && mediaItems.length ? (
+                    {articleMediaItems.length ? (
+                      <article className="glass-card study-card study-card-wide media-section-card" id="articles">
+                        <span className="eyebrow">Articles</span>
+                        <h3>Read more from source pages</h3>
+                        <MediaShelf items={articleMediaItems} mode="article" />
+                      </article>
+                    ) : null}
+
+                    {podcastMediaItems.length ? (
+                      <article className="glass-card study-card study-card-wide media-section-card" id="podcasts">
+                        <span className="eyebrow">Podcasts</span>
+                        <h3>Listen and explore related episodes</h3>
+                        <MediaShelf items={podcastMediaItems} mode="podcast" />
+                      </article>
+                    ) : null}
+
+                    {!videoMediaItems.length && !photoMediaItems.length && !articleMediaItems.length && !podcastMediaItems.length && mediaItems.length ? (
                       <article className="glass-card study-card study-card-wide media-section-card">
                         <span className="eyebrow">Media</span>
                         <h3>Resources</h3>
@@ -1629,10 +2018,10 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
         isOpen={terminalOpen}
         onAnalyze={analyzePractice}
         onDraftChange={updateDraft}
-        onFileChange={setActiveFile}
+        onFileChange={changeActiveTerminalFile}
         onToggle={() => setTerminalOpen((current) => !current)}
         review={review}
-        track={activeTrack}
+        terminalConfig={terminalConfig}
       />
     </div>
   );

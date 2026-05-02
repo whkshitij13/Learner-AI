@@ -72,6 +72,12 @@ function isAudioItem(item) {
   return type.includes("podcast") || type.includes("audio") || /\.(mp3|wav|ogg|m4a)(\?.*)?$/i.test(href);
 }
 
+function isArticleItem(item) {
+  const type = String(item?.type || "").toLowerCase();
+
+  return type.includes("article") || type.includes("guide") || type.includes("reading");
+}
+
 function getAudioUrl(item) {
   const href = String(item?.audio || item?.href || "").trim();
 
@@ -116,9 +122,17 @@ function MediaThumb({ item, isVideo }) {
     );
   }
 
+  if (isArticleItem(item)) {
+    return (
+      <div className="media-thumb-wrap media-thumb-fallback media-thumb-article">
+        <span className="media-fallback-icon">Read</span>
+      </div>
+    );
+  }
+
   return (
     <div className={`media-thumb-wrap media-thumb-fallback ${isVideo ? "media-thumb-wrap-video" : ""}`}>
-      <span className="media-fallback-icon">{isVideo ? "Play" : "Image"}</span>
+      <span className="media-fallback-icon">{isVideo ? "Play" : "View"}</span>
     </div>
   );
 }
@@ -136,7 +150,10 @@ function MediaViewerImage({ item }) {
 export default function MediaShelf({ items, mode = "mixed" }) {
   const [activeItem, setActiveItem] = useState(null);
   const shelfClassName = useMemo(
-    () => `topic-media-grid ${mode === "video" ? "topic-media-grid-video" : ""} ${mode === "photo" ? "topic-media-grid-photo" : ""}`.trim(),
+    () =>
+      `topic-media-grid ${mode === "video" ? "topic-media-grid-video" : ""} ${mode === "photo" ? "topic-media-grid-photo" : ""} ${
+        mode === "article" ? "topic-media-grid-article" : ""
+      } ${mode === "podcast" ? "topic-media-grid-podcast" : ""}`.trim(),
     [mode]
   );
 
@@ -158,6 +175,9 @@ export default function MediaShelf({ items, mode = "mixed" }) {
   }
 
   function openItem(item) {
+    const itemIsAudio = isAudioItem(item);
+    const itemIsArticle = isArticleItem(item) || mode === "article";
+
     if (isVideoItem(item, mode)) {
       if (!canRenderVideoItem(item) && item.href) {
         window.open(item.href, "_blank", "noopener,noreferrer");
@@ -168,8 +188,32 @@ export default function MediaShelf({ items, mode = "mixed" }) {
       return;
     }
 
-    if ((mode === "photo" && item.image) || isAudioItem(item)) {
-      setActiveItem(item);
+    if (mode === "photo") {
+      if (item.image) {
+        setActiveItem(item);
+        return;
+      }
+
+      if (item.href) {
+        window.open(item.href, "_blank", "noopener,noreferrer");
+      }
+      return;
+    }
+
+    if (itemIsAudio) {
+      if (getAudioUrl(item)) {
+        setActiveItem(item);
+        return;
+      }
+
+      if (item.href) {
+        window.open(item.href, "_blank", "noopener,noreferrer");
+      }
+      return;
+    }
+
+    if (itemIsArticle && item.href) {
+      window.open(item.href, "_blank", "noopener,noreferrer");
       return;
     }
 
@@ -201,7 +245,17 @@ export default function MediaShelf({ items, mode = "mixed" }) {
               <h3>{item.title}</h3>
               <p>{item.description}</p>
               <span className="media-link">
-                {itemIsVideo ? (canRenderVideoItem(item) ? "Open player" : "Open video source") : itemIsAudio ? "Open audio" : mode === "photo" ? "Open photo" : "Open resource"}
+                {itemIsVideo
+                  ? canRenderVideoItem(item)
+                    ? "Open player"
+                    : "Open video source"
+                  : itemIsAudio
+                    ? "Open podcast"
+                    : isArticleItem(item) || mode === "article"
+                      ? "Open article"
+                      : mode === "photo"
+                        ? "Open photo"
+                        : "Open resource"}
               </span>
             </button>
           );

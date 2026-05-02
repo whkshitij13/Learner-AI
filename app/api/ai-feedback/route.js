@@ -23,10 +23,11 @@ async function fetchGeminiFeedback(payload) {
             parts: [
               {
                 text: [
-                  "Review this learner submission for Salesforce practice.",
+                  "Review this learner submission for programming practice.",
                   "Return concise JSON with keys: summary, fixes, hints.",
                   "Keep fixes practical and beginner-friendly.",
                   `Track: ${payload.track}`,
+                  `Language: ${payload.language || "unknown"}`,
                   `Topic: ${payload.topicTitle || "Practice"}`,
                   `Files: ${JSON.stringify(payload.files)}`
                 ].join("\n")
@@ -68,6 +69,6 @@ export async function POST(request) {
     provider: aiReview ? "Gemini Flash-Lite + local validator" : "Local validator",
     staticReview,
     aiReview,
-    template: getFallbackTemplate(payload.track)
+    template: getFallbackTemplate(payload.track, payload.language)
   });
 }

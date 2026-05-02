@@ -2,19 +2,11 @@
 
 import { useMemo } from "react";
 
-const WEB_FILES = [
-  { id: "html", label: "index.html" },
-  { id: "js", label: "script.js" },
-  { id: "css", label: "styles.css" }
-];
-
-const APEX_FILES = [{ id: "class", label: "Example.cls" }];
-
 export default function PracticeTerminal({
   available = true,
   isOpen,
   onToggle,
-  track,
+  terminalConfig,
   drafts,
   activeFile,
   onFileChange,
@@ -23,8 +15,11 @@ export default function PracticeTerminal({
   isAnalyzing,
   review
 }) {
-  const isApex = track === "apex";
-  const files = useMemo(() => (isApex ? APEX_FILES : WEB_FILES), [isApex]);
+  const files = useMemo(() => terminalConfig?.files || [], [terminalConfig]);
+  const terminalTitle = terminalConfig?.title || "Practice terminal";
+  const terminalDescription = terminalConfig?.description || "Topic-aware practice space";
+  const compilerLabel = terminalConfig?.compiler || "Gemini";
+  const activePlaceholder = files.find((file) => file.id === activeFile)?.placeholder || "Start writing here...";
 
   if (!available) {
     return null;
@@ -40,7 +35,8 @@ export default function PracticeTerminal({
           <div className="terminal-topbar">
             <div>
               <p className="eyebrow">Practice Terminal</p>
-              <h3>{isApex ? "Apex class reviewer" : "Web code practice space"}</h3>
+              <h3>{terminalTitle}</h3>
+              <p className="muted-copy">{terminalDescription}</p>
             </div>
             <button className="ghost-btn" onClick={onToggle} type="button">
               Hide
@@ -63,16 +59,16 @@ export default function PracticeTerminal({
           <textarea
             className="terminal-editor"
             onChange={(event) => onDraftChange(activeFile, event.target.value)}
-            placeholder={isApex ? "Write an Apex class or test here..." : "Write HTML, JS, or CSS here..."}
+            placeholder={activePlaceholder}
             value={drafts[activeFile] || ""}
           />
 
           <div className="terminal-actions">
             <button className="primary-btn" onClick={onAnalyze} type="button">
-              {isAnalyzing ? "Reviewing..." : "Compile & Review"}
+              {isAnalyzing ? "Reviewing..." : `${compilerLabel} review`}
             </button>
             <p className="muted-copy">
-              Uses static validation first, then optional low-cost AI if `GEMINI_API_KEY` is configured.
+              Uses topic-aware validation first, then Gemini feedback when `GEMINI_API_KEY` is configured.
             </p>
           </div>
 

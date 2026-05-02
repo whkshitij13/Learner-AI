@@ -2,10 +2,10 @@ import { notFound } from "next/navigation";
 import TopicDashboard from "@/components/topic-dashboard";
 import { EMPTY_CURRICULUM } from "@/lib/dashboard-seed";
 
-const VALID_TRACKS = new Set(["lwc", "apex"]);
+const VALID_TRACKS = new Set(["workspace", "lwc", "apex"]);
 
 export function generateStaticParams() {
-  return [{ track: "lwc" }, { track: "apex" }];
+  return [{ track: "workspace" }, { track: "lwc" }, { track: "apex" }];
 }
 
 export default async function TrackDashboardPage({ params }) {
