@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Learner DEV",
+  title: "Learner AI",
   description: "AI study platform for LWC and Apex with topic cards, practice terminal, media modules, and mock tests."
 };
 

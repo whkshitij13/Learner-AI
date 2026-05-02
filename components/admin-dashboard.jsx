@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import StudyHeader from "@/components/study-header";
 import { auth, db } from "@/lib/firebase/client";
-import { deleteSearchHistoryEntry, getAdminUserSnapshots, purgeUserData, updateAdminUserProfile } from "@/lib/admin-store";
+import { clearUserSearchHistory, deleteSearchHistoryEntry, getAdminUserSnapshots, purgeUserData, updateAdminUserProfile } from "@/lib/admin-store";
 import { isAdminEmail } from "@/lib/admin";
+import { THEME_PRESETS } from "@/lib/personalization";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const storedTheme = window.localStorage.getItem("learner-dev-theme") || "light";
@@ -59,10 +61,18 @@ export default function AdminDashboard() {
       }
 
       setLoading(true);
+      setError("");
 
       try {
         const snapshots = await getAdminUserSnapshots(db);
         setUsers(snapshots);
+      } catch (loadError) {
+        setUsers([]);
+        setError(
+          loadError?.code === "permission-denied"
+            ? "Firestore blocked this admin query. Publish the updated Firestore rules, then reload the dashboard."
+            : "Could not load admin data from Firestore."
+        );
       } finally {
         setLoading(false);
       }
@@ -91,21 +101,39 @@ export default function AdminDashboard() {
       return;
     }
 
-    const snapshots = await getAdminUserSnapshots(db);
-    setUsers(snapshots);
-    if (message) {
-      setStatus(message);
-      setTimeout(() => setStatus(""), 2000);
+    try {
+      const snapshots = await getAdminUserSnapshots(db);
+      setUsers(snapshots);
+      setError("");
+      if (message) {
+        setStatus(message);
+        setTimeout(() => setStatus(""), 2000);
+      }
+    } catch (loadError) {
+      setError(
+        loadError?.code === "permission-denied"
+          ? "Firestore blocked this admin action. Publish the updated Firestore rules, then try again."
+          : "Admin dashboard refresh failed."
+      );
     }
   }
 
-  async function handleDeleteSearch(userId, entryId) {
+  async function handleDeleteSearch(userId, entry) {
     if (!db) {
       return;
     }
 
-    await deleteSearchHistoryEntry(db, userId, entryId);
+    await deleteSearchHistoryEntry(db, userId, entry);
     await refreshUsers("Search entry deleted.");
+  }
+
+  async function handleClearHistory(userId) {
+    if (!db) {
+      return;
+    }
+
+    await clearUserSearchHistory(db, userId);
+    await refreshUsers("User history cleared.");
   }
 
   async function handleDeleteUser(userId) {
@@ -138,7 +166,7 @@ export default function AdminDashboard() {
       />
 
       <main className="dashboard-main admin-main">
-        <section className="dashboard-hero glass-card">
+        {/* <section className="dashboard-hero glass-card">
           <div>
             <span className="eyebrow">Admin dashboard</span>
             <h1>Manage users, history, interests, and themes.</h1>
@@ -149,7 +177,7 @@ export default function AdminDashboard() {
             <span>{users.reduce((sum, entry) => sum + entry.searches.length, 0)} search entries</span>
             <span>Admin only</span>
           </div>
-        </section>
+        </section> */}
 
         <section className="glass-card study-card">
           <div className="topic-card-top">
@@ -159,6 +187,7 @@ export default function AdminDashboard() {
             </div>
             {status ? <span className="topic-kind">{status}</span> : null}
           </div>
+          {error ? <p className="error-line">{error}</p> : null}
           <input
             className="dashboard-input"
             onChange={(event) => setSearch(event.target.value)}
@@ -229,7 +258,7 @@ export default function AdminDashboard() {
 
                   <label className="theme-field">
                     <span>Theme preset</span>
-                    <input
+                    <select
                       className="dashboard-input"
                       onChange={(event) =>
                         setUsers((current) =>
@@ -240,14 +269,29 @@ export default function AdminDashboard() {
                           )
                         )
                       }
-                      value={entry.profile?.themePreset || ""}
-                    />
+                      value={entry.profile?.themePreset || THEME_PRESETS[0].id}
+                    >
+                      {THEME_PRESETS.map((preset) => (
+                        <option key={preset.id} value={preset.id}>
+                          {preset.label}
+                        </option>
+                      ))}
+                    </select>
                   </label>
+                </div>
+
+                <div className="dashboard-badges">
+                  <span>{Object.values(entry.dashboard?.tracks || {}).reduce((sum, track) => sum + (track?.topics?.length || 0), 0)} topics</span>
+                  <span>{entry.searches.length} history items</span>
+                  <span>{entry.profile?.themePreset || "No preset"}</span>
                 </div>
 
                 <div className="header-actions-compact">
                   <button className="button" onClick={() => handleSaveMeta(entry)} type="button">
                     Save user meta
+                  </button>
+                  <button className="button button-secondary" onClick={() => handleClearHistory(entry.id)} type="button">
+                    Clear history
                   </button>
                   <button className="button button-secondary danger-link" onClick={() => handleDeleteUser(entry.id)} type="button">
                     Delete user data
@@ -269,7 +313,8 @@ export default function AdminDashboard() {
                           <strong>{searchEntry.query}</strong>
                         </p>
                         <p>{searchEntry.createdAt || "No timestamp"}</p>
-                        <button className="ghost-btn" onClick={() => handleDeleteSearch(entry.id, searchEntry.id)} type="button">
+                        <p>{searchEntry.track || "workspace"} · {searchEntry.source}</p>
+                        <button className="ghost-btn" onClick={() => handleDeleteSearch(entry.id, searchEntry)} type="button">
                           Delete search
                         </button>
                       </div>

@@ -800,7 +800,7 @@ export default function LearnerDevApp({ curriculum, curriculumAudit }) {
           </div>
           <div>
             <p className="panel-kicker">Modernizr Study Mode</p>
-            <h1>Learner DEV</h1>
+            <h1>Learner AI</h1>
           </div>
         </div>
 

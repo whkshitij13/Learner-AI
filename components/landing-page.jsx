@@ -401,7 +401,7 @@ export default function LandingPage({ tracks }) {
       <footer className="study-footer glass-card landing-footer">
         <div className="landing-footer-grid">
           <div className="landing-footer-copy">
-            <span className="eyebrow">Learner DEV</span>
+            <span className="eyebrow">Learner AI</span>
             <h3>Search a topic, read deeply, and keep your learning history in one place.</h3>
             <p>
               The platform is built to turn curiosity into a structured study flow with long-form content, media,
@@ -432,7 +432,7 @@ export default function LandingPage({ tracks }) {
 
         <div className="landing-footer-meta">
           <span>Built for deep study, not shallow browsing.</span>
-          <span>© 2026 Learner DEV</span>
+          <span>© 2026 Learner AI</span>
         </div>
       </footer>
     </div>
