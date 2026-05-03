@@ -1,6 +1,8 @@
-# Learner Dev
+# Learner AI
 
-Learner Dev is an animated AI learning dashboard that turns a single topic search into a deep, structured study workspace. It is built for learners who want more than a short answer: readable explanations, clickable subtopics, real media previews, progress tracking, practice areas, and a calm dashboard layout that stays consistent while the content changes.
+![Learner AI animated dashboard preview](assets/readme/learner-ai-animated.svg)
+
+Learner AI is an animated AI learning dashboard that turns a single topic search into a deep, structured study workspace. It is built for learners who want more than a short answer: readable explanations, clickable subtopics, real media previews, progress tracking, practice areas, and a calm dashboard layout that stays consistent while the content changes.
 
 ## What It Looks Like
 
@@ -17,9 +19,9 @@ The UI includes:
 - Photo cards that can render direct image URLs and open reliable source pages.
 - Podcast cards that support real episode pages and direct audio files when available.
 
-## Demo Media
+## Photos And Videos
 
-The dashboard is designed to render real learning media directly inside the topic page:
+Learner AI is designed to make generated study pages feel visual, not plain-text only. When Gemini returns real media URLs, the dashboard separates them into video, photo, article, and podcast sections so each resource gets the right preview style.
 
 | Media Type | How It Renders |
 | --- | --- |
@@ -27,6 +29,8 @@ The dashboard is designed to render real learning media directly inside the topi
 | Photos | Stable direct image URLs render as image cards and full preview modals. Source pages open when direct images are not available. |
 | Articles | Article and guide cards open the original source. |
 | Podcasts | Podcast pages open from the card; direct audio files render with an audio player. |
+
+The README banner above is an animated GitHub-safe preview of that experience: the search particles move, the media cards float, the video tile shows a play preview, the photo tile shows an image-style card, and the podcast tile pulses like an audio surface. Inside the real app, those cards are connected to actual topic media returned by the AI route.
 
 ## Tech Stack
 

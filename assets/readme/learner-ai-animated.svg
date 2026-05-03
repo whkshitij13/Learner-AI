@@ -1,0 +1,136 @@
+<svg width="1200" height="520" viewBox="0 0 1200 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Learner AI animated dashboard preview</title>
+  <desc id="desc">Animated glass dashboard preview with topic rail, study cards, media previews, and particle search motion.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#080B18"/>
+      <stop offset="0.48" stop-color="#10172E"/>
+      <stop offset="1" stop-color="#071B20"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="190" y1="80" x2="980" y2="438" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8DA2FF"/>
+      <stop offset="0.52" stop-color="#73F0D3"/>
+      <stop offset="1" stop-color="#FFB703"/>
+    </linearGradient>
+    <linearGradient id="card" x1="156" y1="82" x2="1028" y2="466" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.06"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.45 0 0 0 0 0.94 0 0 0 0 0.83 0 0 0 0.9 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+    <style>
+      .float-slow { animation: floatSlow 6s ease-in-out infinite; }
+      .float-fast { animation: floatFast 4.5s ease-in-out infinite; }
+      .pulse { animation: pulse 2.8s ease-in-out infinite; transform-origin: center; }
+      .spin { animation: spin 7s linear infinite; transform-origin: 881px 174px; }
+      .dash { stroke-dasharray: 78 22; animation: dashMove 5s linear infinite; }
+      .scan { animation: scan 3.6s ease-in-out infinite; }
+      .media-pop { animation: mediaPop 5s ease-in-out infinite; transform-origin: center; }
+      .media-pop.delay-a { animation-delay: 0.35s; }
+      .media-pop.delay-b { animation-delay: 0.75s; }
+
+      @keyframes floatSlow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-16px); }
+      }
+
+      @keyframes floatFast {
+        0%, 100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(10px) translateX(8px); }
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.52; transform: scale(0.92); }
+        50% { opacity: 1; transform: scale(1.08); }
+      }
+
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes dashMove {
+        from { stroke-dashoffset: 0; }
+        to { stroke-dashoffset: -100; }
+      }
+
+      @keyframes scan {
+        0%, 100% { transform: translateX(-18px); opacity: 0.3; }
+        50% { transform: translateX(214px); opacity: 0.85; }
+      }
+
+      @keyframes mediaPop {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+    </style>
+  </defs>
+
+  <rect width="1200" height="520" rx="36" fill="url(#bg)"/>
+  <circle class="float-slow" cx="106" cy="94" r="68" fill="#8DA2FF" opacity="0.16"/>
+  <circle class="float-fast" cx="1038" cy="418" r="92" fill="#73F0D3" opacity="0.13"/>
+  <circle class="pulse" cx="973" cy="82" r="6" fill="#73F0D3"/>
+  <circle class="pulse" cx="214" cy="438" r="5" fill="#FFB703"/>
+  <circle class="pulse" cx="1111" cy="190" r="4" fill="#8DA2FF"/>
+
+  <path class="dash" d="M168 398C284 308 340 390 478 286C640 164 786 236 955 104" stroke="url(#accent)" stroke-width="2" opacity="0.45"/>
+
+  <g filter="url(#softShadow)">
+    <rect x="108" y="64" width="984" height="392" rx="28" fill="url(#card)" stroke="#FFFFFF" stroke-opacity="0.18"/>
+    <rect x="132" y="88" width="214" height="344" rx="22" fill="#070B18" fill-opacity="0.56" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <rect x="374" y="88" width="694" height="344" rx="22" fill="#090E1D" fill-opacity="0.42" stroke="#FFFFFF" stroke-opacity="0.12"/>
+  </g>
+
+  <text x="162" y="140" fill="#FFFFFF" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="800">Learner AI</text>
+  <text x="162" y="169" fill="#A9B4D0" font-family="Manrope, Arial, sans-serif" font-size="14">Animated study workspace</text>
+
+  <g class="float-slow">
+    <rect x="162" y="205" width="150" height="38" rx="12" fill="#8DA2FF" fill-opacity="0.18" stroke="#8DA2FF" stroke-opacity="0.35"/>
+    <text x="184" y="229" fill="#FFFFFF" font-family="Manrope, Arial, sans-serif" font-size="13" font-weight="700">Topic rail</text>
+    <rect x="162" y="257" width="124" height="14" rx="7" fill="#FFFFFF" fill-opacity="0.18"/>
+    <rect x="162" y="284" width="146" height="14" rx="7" fill="#FFFFFF" fill-opacity="0.12"/>
+    <rect x="162" y="311" width="102" height="14" rx="7" fill="#FFFFFF" fill-opacity="0.12"/>
+  </g>
+
+  <g>
+    <text x="412" y="139" fill="#FFFFFF" font-family="Manrope, Arial, sans-serif" font-size="32" font-weight="800">Search once. Study deeply.</text>
+    <text x="414" y="171" fill="#A9B4D0" font-family="Manrope, Arial, sans-serif" font-size="15">Real videos, photos, articles, podcasts, and animated learning cards.</text>
+    <rect x="412" y="207" width="414" height="54" rx="18" fill="#FFFFFF" fill-opacity="0.1" stroke="#FFFFFF" stroke-opacity="0.16"/>
+    <rect class="scan" x="430" y="223" width="44" height="22" rx="11" fill="#73F0D3" opacity="0.38"/>
+    <text x="436" y="240" fill="#D7DDF2" font-family="Manrope, Arial, sans-serif" font-size="14">Build a full study card for any topic...</text>
+  </g>
+
+  <g class="spin" filter="url(#glow)">
+    <circle cx="881" cy="174" r="31" stroke="#73F0D3" stroke-width="4" opacity="0.9"/>
+    <line x1="904" y1="198" x2="930" y2="224" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="881" cy="126" r="4" fill="#8DA2FF"/>
+    <circle cx="929" cy="174" r="4" fill="#73F0D3"/>
+    <circle cx="881" cy="222" r="4" fill="#FFB703"/>
+    <circle cx="833" cy="174" r="4" fill="#8DA2FF"/>
+  </g>
+
+  <g class="media-pop">
+    <rect x="414" y="302" width="168" height="94" rx="18" fill="#101A32" stroke="#FFFFFF" stroke-opacity="0.14"/>
+    <polygon points="478,333 478,365 507,349" fill="#73F0D3"/>
+    <text x="434" y="421" fill="#FFFFFF" font-family="Manrope, Arial, sans-serif" font-size="14" font-weight="700">Video preview</text>
+  </g>
+  <g class="media-pop delay-a">
+    <rect x="610" y="302" width="168" height="94" rx="18" fill="#182033" stroke="#FFFFFF" stroke-opacity="0.14"/>
+    <circle cx="657" cy="337" r="18" fill="#FFB703" opacity="0.85"/>
+    <path d="M628 374L672 346L712 374H628Z" fill="#73F0D3" opacity="0.72"/>
+    <text x="630" y="421" fill="#FFFFFF" font-family="Manrope, Arial, sans-serif" font-size="14" font-weight="700">Photo cards</text>
+  </g>
+  <g class="media-pop delay-b">
+    <rect x="806" y="302" width="168" height="94" rx="18" fill="#12172B" stroke="#FFFFFF" stroke-opacity="0.14"/>
+    <circle cx="890" cy="349" r="22" fill="#8DA2FF" opacity="0.24"/>
+    <circle cx="890" cy="349" r="40" stroke="#8DA2FF" stroke-opacity="0.34"/>
+    <circle cx="890" cy="349" r="56" stroke="#73F0D3" stroke-opacity="0.18"/>
+    <text x="826" y="421" fill="#FFFFFF" font-family="Manrope, Arial, sans-serif" font-size="14" font-weight="700">Podcast pulse</text>
+  </g>
+</svg>
