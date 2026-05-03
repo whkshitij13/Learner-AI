@@ -1055,6 +1055,18 @@ body[data-theme="dark"] .theme-ambient-scene {
   }
 }
 
+@keyframes mediaPulseRing {
+  0% {
+    opacity: 0.72;
+    transform: scale(0.52);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
 @keyframes auroraShift {
   0%,
   100% {
@@ -2405,6 +2417,34 @@ body[data-theme="dark"] .brand-mascot-label {
   flex-wrap: wrap;
 }
 
+.search-action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 174px;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.search-action-button:disabled {
+  cursor: wait;
+  opacity: 0.9;
+}
+
+.search-particle-icon {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-left: -4px;
+  flex: 0 0 30px;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent-2) 72%, transparent));
+  pointer-events: none;
+}
+
+.search-particle-icon canvas {
+  display: block;
+}
+
 .suggestion-row {
   display: flex;
   gap: 10px;
@@ -2701,6 +2741,7 @@ body[data-theme="dark"] .terminal-editor {
 }
 
 .media-thumb-fallback {
+  position: relative;
   display: grid;
   place-items: center;
   min-height: 132px;
@@ -2779,6 +2820,7 @@ body[data-theme="dark"] .terminal-editor {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0)),
     var(--bg-soft);
+  transform-style: preserve-3d;
 }
 
 .media-card-video {
@@ -2805,6 +2847,19 @@ body[data-theme="dark"] .terminal-editor {
   transition: transform 0.45s ease;
 }
 
+.media-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 10%, color-mix(in srgb, var(--accent-2) 20%, transparent), transparent 26%),
+    radial-gradient(circle at 86% 24%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 24%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
 .media-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 18px 34px rgba(92, 84, 166, 0.12);
@@ -2817,6 +2872,34 @@ body[data-theme="dark"] .terminal-editor {
 
 .media-card:hover::after {
   transform: translate(-8px, -10px);
+}
+
+.media-card:hover::before {
+  opacity: 1;
+}
+
+.media-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.media-card-audio .media-thumb-fallback {
+  overflow: hidden;
+}
+
+.media-card-audio .media-thumb-fallback::before,
+.media-card-audio .media-thumb-fallback::after {
+  content: "";
+  position: absolute;
+  width: 58%;
+  height: 58%;
+  border: 1px solid color-mix(in srgb, var(--accent-4) 52%, transparent);
+  border-radius: 999px;
+  animation: mediaPulseRing 2.4s ease-out infinite;
+}
+
+.media-card-audio .media-thumb-fallback::after {
+  animation-delay: 0.8s;
 }
 
 .media-card h3 {

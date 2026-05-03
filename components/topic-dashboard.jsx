@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import MediaShelf from "@/components/media-shelf";
 import PracticeTerminal from "@/components/practice-terminal";
+import SearchParticleIcon from "@/components/search-particle-icon";
 import StudyHeader from "@/components/study-header";
 import ThemeAmbientScene from "@/components/theme-ambient-scene";
 import { auth, db } from "@/lib/firebase/client";
@@ -214,7 +215,7 @@ function normalizeMediaItem(item, index) {
   const rawType = String(item?.type || "Article").trim();
   const type = rawType.toLowerCase() === "image" ? "Photo" : rawType;
   const href = isSafeHttpUrl(item?.href) && !isPlaceholderDomain(item?.href) ? String(item.href).trim() : "";
-  const image = isSafeHttpUrl(item?.image) && !isPlaceholderDomain(item?.image) ? String(item.image).trim() : "";
+  let image = isSafeHttpUrl(item?.image) && !isPlaceholderDomain(item?.image) ? String(item.image).trim() : "";
   const previewVideo =
     isPlayablePreviewVideo(item?.previewVideo) && !isPlaceholderDomain(item?.previewVideo) ? String(item.previewVideo).trim() : "";
   const audio = isSafeHttpUrl(item?.audio) && !isPlaceholderDomain(item?.audio) ? String(item.audio).trim() : "";
@@ -226,6 +227,10 @@ function normalizeMediaItem(item, index) {
 
   if (!href && !image && !previewVideo && !audio) {
     return null;
+  }
+
+  if (!image && /^https?:\/\/.+\.(avif|gif|jpe?g|png|webp)(\?.*)?$/i.test(href)) {
+    image = href;
   }
 
   return {
@@ -256,7 +261,12 @@ function isVideoMediaItem(item) {
 function isPhotoMediaItem(item) {
   const type = String(item?.type || "").toLowerCase();
 
-  return Boolean(item?.image && !isVideoMediaItem(item) && !type.includes("podcast") && !type.includes("audio"));
+  return Boolean(
+    !isVideoMediaItem(item) &&
+      !type.includes("podcast") &&
+      !type.includes("audio") &&
+      (item?.image || type.includes("photo") || type.includes("image"))
+  );
 }
 
 function isPodcastMediaItem(item) {
@@ -1462,8 +1472,14 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                   />
                   <div className="ai-composer-actions">
                     {pendingBranchPrompt ? <span className="pill">Subtopic ready</span> : null}
-                    <button className="button" onClick={() => generateTopic(pendingBranchPrompt || topicPrompt)} type="button">
-                      {composerButtonLabel}
+                    <button
+                      className="button search-action-button"
+                      disabled={isGeneratingTopic}
+                      onClick={() => generateTopic(pendingBranchPrompt || topicPrompt)}
+                      type="button"
+                    >
+                      <SearchParticleIcon active={isGeneratingTopic} />
+                      <span>{composerButtonLabel}</span>
                     </button>
                     {generationError ? <p className="error-line">{generationError}</p> : null}
                   </div>

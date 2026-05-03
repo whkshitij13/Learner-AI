@@ -31,6 +31,38 @@ function getYouTubeEmbedUrl(value) {
   return "";
 }
 
+function getYouTubeVideoId(value) {
+  const rawValue = String(value || "").trim();
+
+  if (!rawValue) {
+    return "";
+  }
+
+  try {
+    const url = new URL(rawValue);
+    const hostname = url.hostname.replace(/^www\./, "");
+    const pathParts = url.pathname.split("/").filter(Boolean);
+
+    if (hostname === "youtube.com" || hostname === "m.youtube.com") {
+      return url.searchParams.get("v") || (pathParts[0] === "shorts" ? pathParts[1] : "") || (pathParts[0] === "embed" ? pathParts[1] : "");
+    }
+
+    if (hostname === "youtu.be") {
+      return pathParts[0] || "";
+    }
+  } catch {
+    return "";
+  }
+
+  return "";
+}
+
+function getYouTubeThumbnailUrl(value) {
+  const videoId = getYouTubeVideoId(value);
+
+  return videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : "";
+}
+
 function getVimeoEmbedUrl(value) {
   const rawValue = String(value || "").trim();
 
@@ -72,6 +104,10 @@ function isAudioItem(item) {
   return type.includes("podcast") || type.includes("audio") || /\.(mp3|wav|ogg|m4a)(\?.*)?$/i.test(href);
 }
 
+function isDirectImageUrl(value) {
+  return /^https?:\/\/.+\.(avif|gif|jpe?g|png|webp)(\?.*)?$/i.test(String(value || "").trim());
+}
+
 function isArticleItem(item) {
   const type = String(item?.type || "").toLowerCase();
 
@@ -84,9 +120,26 @@ function getAudioUrl(item) {
   return /\.(mp3|wav|ogg|m4a)(\?.*)?$/i.test(href) ? href : "";
 }
 
+function getRenderableImageUrl(item, isVideo) {
+  if (item?.image) {
+    return item.image;
+  }
+
+  if (isVideo) {
+    return getYouTubeThumbnailUrl(item?.href);
+  }
+
+  if (isDirectImageUrl(item?.href)) {
+    return item.href;
+  }
+
+  return "";
+}
+
 function MediaThumb({ item, isVideo }) {
   const [imageFailed, setImageFailed] = useState(false);
-  const canRenderImage = item.image && !imageFailed;
+  const renderableImage = getRenderableImageUrl(item, isVideo);
+  const canRenderImage = renderableImage && !imageFailed;
 
   if (item.previewVideo) {
     return (
@@ -96,7 +149,7 @@ function MediaThumb({ item, isVideo }) {
           loop
           muted
           playsInline
-          poster={canRenderImage ? item.image : ""}
+          poster={canRenderImage ? renderableImage : ""}
           preload="metadata"
           src={item.previewVideo}
         />
@@ -108,7 +161,7 @@ function MediaThumb({ item, isVideo }) {
   if (canRenderImage) {
     return (
       <div className={`media-thumb-wrap ${isVideo ? "media-thumb-wrap-video" : ""}`}>
-        <img alt={item.title} className="media-thumb" onError={() => setImageFailed(true)} src={item.image} />
+        <img alt={item.title} className="media-thumb" onError={() => setImageFailed(true)} src={renderableImage} />
         {isVideo ? <span className="media-play-indicator">Open player</span> : null}
       </div>
     );
@@ -139,12 +192,13 @@ function MediaThumb({ item, isVideo }) {
 
 function MediaViewerImage({ item }) {
   const [imageFailed, setImageFailed] = useState(false);
+  const renderableImage = getRenderableImageUrl(item, false);
 
-  if (!item.image || imageFailed) {
+  if (!renderableImage || imageFailed) {
     return <MediaThumb isVideo={false} item={item} />;
   }
 
-  return <img alt={item.title} className="media-viewer-image" onError={() => setImageFailed(true)} src={item.image} />;
+  return <img alt={item.title} className="media-viewer-image" onError={() => setImageFailed(true)} src={renderableImage} />;
 }
 
 export default function MediaShelf({ items, mode = "mixed" }) {
@@ -232,7 +286,7 @@ export default function MediaShelf({ items, mode = "mixed" }) {
           return (
             <button
               key={item.title}
-              className={`media-card ${itemIsVideo ? "media-card-video" : ""}`}
+              className={`media-card ${itemIsVideo ? "media-card-video" : ""} ${itemIsAudio ? "media-card-audio" : ""}`}
               onBlur={stopPreview}
               onClick={() => openItem(item)}
               onFocus={playPreview}
@@ -311,7 +365,7 @@ export default function MediaShelf({ items, mode = "mixed" }) {
                   </button>
                 ) : null}
               </div>
-            ) : activeItem.image ? (
+            ) : getRenderableImageUrl(activeItem, false) ? (
               <MediaViewerImage item={activeItem} />
             ) : null}
 
