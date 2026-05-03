@@ -2390,6 +2390,26 @@ body[data-theme="dark"] .brand-mascot-label {
   animation: pulseOrbit 2.2s ease-in-out infinite;
 }
 
+.ai-loader-orb-3d {
+  width: 86px;
+  height: 86px;
+  margin-left: -7px;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.55), transparent 24%),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, #86bd8e 36%, transparent), transparent 68%);
+  box-shadow:
+    0 18px 30px rgba(65, 142, 86, 0.18),
+    0 0 34px rgba(132, 221, 149, 0.18);
+  animation: none;
+  filter: saturate(1.08);
+}
+
+.ai-loader-orb-3d canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .ai-loader-copy {
   display: grid;
   gap: 6px;
@@ -2443,6 +2463,14 @@ body[data-theme="dark"] .brand-mascot-label {
 
 .search-particle-icon canvas {
   display: block;
+}
+
+.search-particle-icon-fallback {
+  border: 1px solid color-mix(in srgb, var(--accent-2) 68%, transparent);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 34% 34%, #ffffff 0 11%, transparent 12%),
+    radial-gradient(circle at center, color-mix(in srgb, var(--accent-2) 48%, transparent), transparent 58%);
 }
 
 .suggestion-row {

@@ -76,14 +76,23 @@ export default function StudyHeader({
   }, []);
 
   useEffect(() => {
-    router.prefetch("/home");
-    router.prefetch("/dashboard");
-    router.prefetch("/profile");
-    router.prefetch("/theme-studio");
+    const routes = ["/home", "/dashboard", "/profile", "/theme-studio"];
 
     if (isAdminEmail(user?.email)) {
-      router.prefetch("/admin");
+      routes.push("/admin");
     }
+
+    const prefetchRoutes = () => {
+      routes.forEach((route) => router.prefetch(route));
+    };
+
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(prefetchRoutes, { timeout: 3500 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = window.setTimeout(prefetchRoutes, 1200);
+    return () => window.clearTimeout(timeoutId);
   }, [router, user?.email]);
 
   useEffect(() => {

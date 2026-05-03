@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import LazyThemeAmbientScene from "@/components/lazy-theme-ambient-scene";
 import StudyHeader from "@/components/study-header";
-import ThemeAmbientScene from "@/components/theme-ambient-scene";
 import { auth, db } from "@/lib/firebase/client";
 import { getUserDashboardState } from "@/lib/dashboard-store";
 import { buildProgressSummary, DEFAULT_PROFILE, ensureUserProfile } from "@/lib/profile-store";
@@ -159,7 +159,7 @@ export default function DashboardHome() {
 
   return (
     <div className="dashboard-shell dashboard-home-shell">
-      <ThemeAmbientScene />
+      <LazyThemeAmbientScene />
       <StudyHeader
         onLoginClick={() => {
           window.location.href = "/";

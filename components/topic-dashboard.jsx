@@ -1,18 +1,28 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import LazyThemeAmbientScene from "@/components/lazy-theme-ambient-scene";
 import MediaShelf from "@/components/media-shelf";
 import PracticeTerminal from "@/components/practice-terminal";
-import SearchParticleIcon from "@/components/search-particle-icon";
 import StudyHeader from "@/components/study-header";
-import ThemeAmbientScene from "@/components/theme-ambient-scene";
 import { auth, db } from "@/lib/firebase/client";
 import { getUserDashboardState, logUserQuery, saveUserTrackState } from "@/lib/dashboard-store";
 import { getSuggestionsForInterests, INTEREST_OPTIONS, recommendThemePreset } from "@/lib/personalization";
 import { ensureUserProfile, saveUserProfilePreferences } from "@/lib/profile-store";
 import { PROMPT_LIBRARY } from "@/lib/recommendations";
+
+const SearchParticleIcon = dynamic(() => import("@/components/search-particle-icon"), {
+  ssr: false,
+  loading: () => <span className="search-particle-icon search-particle-icon-fallback" aria-hidden="true" />
+});
+
+const TopicBuildingOrb = dynamic(() => import("@/components/topic-building-orb"), {
+  ssr: false,
+  loading: () => <div className="ai-loader-orb" aria-hidden="true" />
+});
 
 const TRACK_CONFIG = {
   workspace: {
@@ -1237,7 +1247,7 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
 
   return (
     <div className={`dashboard-shell ${sidebarCollapsed ? "dashboard-sidebar-collapsed" : "dashboard-sidebar-open"}`}>
-      <ThemeAmbientScene />
+      <LazyThemeAmbientScene />
       {showOnboarding ? (
         <div className="profile-modal-backdrop" role="presentation">
           <section className="profile-modal glass-card onboarding-modal">
@@ -1537,7 +1547,7 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
             {isGeneratingTopic ? (
               <section className="ai-loading-shell">
                 <article className="glass-card ai-loader-card">
-                  <div className="ai-loader-orb" />
+                  <TopicBuildingOrb />
                   <div className="ai-loader-copy">
                     <span className="eyebrow">AI is building your topic</span>
                     <h3>{LOADING_MESSAGES[loadingMessageIndex]}</h3>

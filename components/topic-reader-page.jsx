@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import LazyThemeAmbientScene from "@/components/lazy-theme-ambient-scene";
 import MediaShelf from "@/components/media-shelf";
 import StudyHeader from "@/components/study-header";
-import ThemeAmbientScene from "@/components/theme-ambient-scene";
 import { auth, db } from "@/lib/firebase/client";
 import { getUserDashboardState } from "@/lib/dashboard-store";
 import { normalizeTopic } from "@/components/topic-dashboard";
@@ -148,7 +148,7 @@ export default function TopicReaderPage({ curriculum, activeTrack, topicId }) {
 
   return (
     <div className="dashboard-shell reader-shell">
-      <ThemeAmbientScene />
+      <LazyThemeAmbientScene />
       <StudyHeader
         onLoginClick={() => {
           window.location.href = "/";

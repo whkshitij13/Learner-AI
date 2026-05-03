@@ -5,8 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { setDoc } from "firebase/firestore";
+import LazyThemeAmbientScene from "@/components/lazy-theme-ambient-scene";
 import StudyHeader from "@/components/study-header";
-import ThemeAmbientScene from "@/components/theme-ambient-scene";
 import { auth, db } from "@/lib/firebase/client";
 import { applyAppearance } from "@/lib/appearance";
 import { THEME_PRESETS } from "@/lib/personalization";
@@ -139,7 +139,7 @@ export default function ThemeStudioPage() {
 
   return (
     <div className="dashboard-shell theme-studio-page-shell">
-      <ThemeAmbientScene />
+      <LazyThemeAmbientScene />
       <StudyHeader
         onLoginClick={() => router.push("/")}
         onLogout={handleLogout}

@@ -40,7 +40,6 @@ The README banner above is an animated GitHub-safe preview of that experience: t
 - **Firestore** for profiles, preferences, dashboard state, saved topics, and progress
 - **Gemini GenerateContent API** for AI topic generation and optional practice review
 - **React Three Fiber** and **Drei** for 3D ambient scenes and particle UI
-- **Three.js** as the rendering engine behind the 3D effects
 - **CSS animations** for card motion, media hover effects, loaders, and theme polish
 - **Graphify** for maintaining a code knowledge graph during development
 
