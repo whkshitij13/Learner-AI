@@ -24,6 +24,21 @@ const TopicBuildingOrb = dynamic(() => import("@/components/topic-building-orb")
   loading: () => <div className="ai-loader-orb" aria-hidden="true" />
 });
 
+const AchievementBadge = dynamic(() => import("@/components/achievement-badge"), {
+  ssr: false,
+  loading: () => <div className="achievement-badge achievement-badge-fallback" aria-hidden="true" />
+});
+
+const BADGE_TIERS = {
+  none: { label: "No badge", next: "Complete the required steps to earn a badge." },
+  bronze: { label: "Bronze", next: "Clear a practice test to reach Silver." },
+  silver: { label: "Silver", next: "Submit a mock challenge to reach Gold." },
+  gold: { label: "Gold", next: "Complete terminal practice to reach Platinum." },
+  platinum: { label: "Platinum", next: "Topic mastered. Keep the streak alive." }
+};
+
+const ASSESSMENT_LEVELS = ["beginner", "intermediate", "advanced"];
+
 const TRACK_CONFIG = {
   workspace: {
     label: "Learning Dashboard",
@@ -150,24 +165,135 @@ export function normalizeTopic(topic, activeTrack) {
     capabilities: {
       quizEnabled:
         typeof topic.capabilities?.quizEnabled === "boolean"
-          ? topic.capabilities.quizEnabled
-          : Boolean(assessmentLevels.beginner?.quiz?.length || assessmentLevels.intermediate?.quiz?.length || assessmentLevels.advanced?.quiz?.length),
+          ? Boolean(isTechnical && topic.capabilities.quizEnabled)
+          : Boolean(
+              isTechnical &&
+                (assessmentLevels.beginner?.quiz?.length ||
+                  assessmentLevels.intermediate?.quiz?.length ||
+                  assessmentLevels.advanced?.quiz?.length)
+            ),
       terminalEnabled:
         typeof topic.capabilities?.terminalEnabled === "boolean"
-          ? topic.capabilities.terminalEnabled
+          ? Boolean(isTechnical && topic.capabilities.terminalEnabled)
           : Boolean(isTechnical),
       mockEnabled:
         typeof topic.capabilities?.mockEnabled === "boolean"
-          ? topic.capabilities.mockEnabled
+          ? Boolean(isTechnical && topic.capabilities.mockEnabled)
           : Boolean(
-              assessmentLevels.beginner?.mockPrompts?.length ||
-                assessmentLevels.intermediate?.mockPrompts?.length ||
-                assessmentLevels.advanced?.mockPrompts?.length
+              isTechnical &&
+                (assessmentLevels.beginner?.mockPrompts?.length ||
+                  assessmentLevels.intermediate?.mockPrompts?.length ||
+                  assessmentLevels.advanced?.mockPrompts?.length)
             ),
       terminalLanguage: topic.capabilities?.terminalLanguage || "",
       terminalFiles: Array.isArray(topic.capabilities?.terminalFiles) ? topic.capabilities.terminalFiles : [],
       compiler: topic.capabilities?.compiler || ""
     }
+  };
+}
+
+function buildInitialTopicProgress() {
+  return {
+    completedSubtopics: [],
+    levelResults: {},
+    mockCompleted: false,
+    terminalReviewed: false,
+    badgeTier: "none",
+    milestoneClaimed: false,
+    certificateUnlocked: false,
+    milestones: [],
+    updatedAt: ""
+  };
+}
+
+function getTopicRequirements(topic, subtopicCards) {
+  const capabilities = topic?.capabilities || {};
+
+  return {
+    read: true,
+    quiz: Boolean(capabilities.quizEnabled),
+    mock: Boolean(capabilities.mockEnabled),
+    terminal: Boolean(capabilities.terminalEnabled),
+    total: [true, capabilities.quizEnabled, capabilities.mockEnabled, capabilities.terminalEnabled].filter(Boolean).length || 1
+  };
+}
+
+function getBestQuizResult(levelResults = {}) {
+  return Object.values(levelResults).reduce((best, result) => {
+    if (!result || typeof result.percent !== "number") {
+      return best;
+    }
+
+    return !best || result.percent > best.percent ? result : best;
+  }, null);
+}
+
+function calculateAchievement(progress, requirements, subtopicCount) {
+  const completedSubtopics = progress?.completedSubtopics || [];
+  const readDone =
+    !requirements.read ||
+    (subtopicCount > 0
+      ? completedSubtopics.length >= Math.max(1, subtopicCount)
+      : completedSubtopics.includes("read-complete"));
+  const bestQuiz = getBestQuizResult(progress?.levelResults);
+  const quizDone = !requirements.quiz || Boolean(bestQuiz?.passed);
+  const mockDone = !requirements.mock || Boolean(progress?.mockCompleted);
+  const terminalDone = !requirements.terminal || Boolean(progress?.terminalReviewed);
+  const completedSteps = [readDone && requirements.read, quizDone && requirements.quiz, mockDone && requirements.mock, terminalDone && requirements.terminal].filter(Boolean).length;
+  const completionPercent = Math.round((completedSteps / requirements.total) * 100);
+  let badgeTier = "none";
+
+  if (readDone) {
+    badgeTier = "bronze";
+  }
+
+  if (readDone && requirements.quiz && quizDone) {
+    badgeTier = "silver";
+  }
+
+  if (readDone && quizDone && requirements.mock && mockDone) {
+    badgeTier = "gold";
+  }
+
+  if (readDone && quizDone && mockDone && requirements.terminal && terminalDone) {
+    badgeTier = "platinum";
+  }
+
+  if (!requirements.quiz && !requirements.mock && !requirements.terminal && readDone) {
+    badgeTier = "bronze";
+  }
+
+  const complete = readDone && quizDone && mockDone && terminalDone;
+
+  return {
+    readDone,
+    quizDone,
+    mockDone,
+    terminalDone,
+    completedSteps,
+    completionPercent,
+    badgeTier,
+    complete,
+    bestQuiz
+  };
+}
+
+function addMilestone(progress, milestone) {
+  const milestones = Array.isArray(progress.milestones) ? progress.milestones : [];
+
+  if (milestones.some((item) => item.id === milestone.id)) {
+    return progress;
+  }
+
+  return {
+    ...progress,
+    milestones: [
+      {
+        ...milestone,
+        achievedAt: new Date().toISOString()
+      },
+      ...milestones
+    ].slice(0, 12)
   };
 }
 
@@ -286,6 +412,12 @@ function isPodcastMediaItem(item) {
   return type.includes("podcast") || type.includes("audio") || /\.(mp3|wav|ogg|m4a)(\?.*)?$/i.test(href);
 }
 
+function isDiagramMediaItem(item) {
+  const type = String(item?.type || "").toLowerCase();
+
+  return type.includes("diagram") || type.includes("map") || type.includes("chart") || type.includes("infographic");
+}
+
 function isArticleMediaItem(item) {
   const type = String(item?.type || "").toLowerCase();
 
@@ -293,6 +425,7 @@ function isArticleMediaItem(item) {
     !isVideoMediaItem(item) &&
     !isPhotoMediaItem(item) &&
     !isPodcastMediaItem(item) &&
+    !isDiagramMediaItem(item) &&
     (type.includes("article") || type.includes("guide") || type.includes("reading") || Boolean(item?.href))
   );
 }
@@ -494,6 +627,7 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
       setCustomTopics((trackState?.topics || []).map((topic) => normalizeTopic(topic, activeTrack)));
       setMockAnswers(trackState?.mockAnswers || {});
       setProgressByTopic(trackState?.progressByTopic || {});
+      setTerminalSessions(trackState?.terminalSessions || {});
       setRecentThemeSignals(nextThemeSignals);
       hasLoadedTrackState.current = true;
     }
@@ -527,12 +661,31 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
       await saveUserTrackState(db, user, activeTrack, {
         topics: customTopics,
         mockAnswers,
-        progressByTopic
+        progressByTopic,
+        terminalSessions,
+        badgeLedger: Object.fromEntries(
+          Object.entries(progressByTopic).map(([topicId, progress]) => [
+            topicId,
+            {
+              badgeTier: progress?.badgeTier || "none",
+              certificateUnlocked: Boolean(progress?.certificateUnlocked),
+              updatedAt: progress?.updatedAt || ""
+            }
+          ])
+        ),
+        milestoneEvents: Object.entries(progressByTopic)
+          .flatMap(([topicId, progress]) =>
+            (progress?.milestones || []).map((milestone) => ({
+              topicId,
+              ...milestone
+            }))
+          )
+          .slice(0, 80)
       });
     }
 
     persistTrackState();
-  }, [activeTrack, customTopics, mockAnswers, progressByTopic, user]);
+  }, [activeTrack, customTopics, mockAnswers, progressByTopic, terminalSessions, user]);
 
   useEffect(() => {
     if (!isGeneratingTopic) {
@@ -646,6 +799,7 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
   const mediaItems = normalizedCurrentTopic?.media || [];
   const videoMediaItems = mediaItems.filter((item) => isVideoMediaItem(item));
   const photoMediaItems = mediaItems.filter((item) => isPhotoMediaItem(item));
+  const diagramMediaItems = mediaItems.filter((item) => isDiagramMediaItem(item));
   const articleMediaItems = mediaItems.filter((item) => isArticleMediaItem(item));
   const podcastMediaItems = mediaItems.filter((item) => isPodcastMediaItem(item));
   const topicCapabilities = normalizedCurrentTopic?.capabilities || {
@@ -693,14 +847,57 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
       ? normalizedCurrentTopic.mockPrompts
       : mockPrompts;
   const activeQuizQuestions = activeAssessment.quiz?.length ? activeAssessment.quiz : normalizedCurrentTopic?.quiz || [];
-  const currentTopicProgress = progressByTopic[normalizedCurrentTopic?.id] || {
-    completedSubtopics: [],
-    milestoneClaimed: false,
-    certificateUnlocked: false
+  const currentTopicProgress = {
+    ...buildInitialTopicProgress(),
+    ...(progressByTopic[normalizedCurrentTopic?.id] || {})
   };
-  const completionPercent = subtopicCards.length
+  const topicRequirements = getTopicRequirements(normalizedCurrentTopic, subtopicCards);
+  const achievement = calculateAchievement(currentTopicProgress, topicRequirements, subtopicCards.length);
+  const pathPercent = subtopicCards.length
     ? Math.round((currentTopicProgress.completedSubtopics.length / subtopicCards.length) * 100)
-    : 0;
+    : achievement.readDone
+      ? 100
+      : 0;
+  const completionPercent = achievement.completionPercent;
+  const badgeMeta = BADGE_TIERS[achievement.badgeTier] || BADGE_TIERS.none;
+  const progressSummary = useMemo(() => {
+    const topics = [...trackTopics, ...customTopics];
+    const badgeCounts = {
+      bronze: 0,
+      silver: 0,
+      gold: 0,
+      platinum: 0
+    };
+    let totalProgress = 0;
+    let completedTopics = 0;
+
+    topics.forEach((topic) => {
+      const normalizedTopic = normalizeTopic(topic, activeTrack);
+      const cards = normalizedTopic?.subtopicCards || [];
+      const progress = {
+        ...buildInitialTopicProgress(),
+        ...(progressByTopic[topic.id] || {})
+      };
+      const topicAchievement = calculateAchievement(progress, getTopicRequirements(normalizedTopic, cards), cards.length);
+
+      totalProgress += topicAchievement.completionPercent;
+
+      if (topicAchievement.complete) {
+        completedTopics += 1;
+      }
+
+      if (badgeCounts[topicAchievement.badgeTier] !== undefined) {
+        badgeCounts[topicAchievement.badgeTier] += 1;
+      }
+    });
+
+    return {
+      totalTopics: topics.length,
+      averageProgress: topics.length ? Math.round(totalProgress / topics.length) : 0,
+      completedTopics,
+      badgeCounts
+    };
+  }, [activeTrack, customTopics, progressByTopic, trackTopics]);
   const interestSuggestions = getSuggestionsForInterests(selectedInterests, SUGGESTED_PROMPTS);
   const visiblePanels = ["learn"];
   const composerButtonLabel = isGeneratingTopic
@@ -722,6 +919,7 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
     { id: "key-terms", label: "Key terms", visible: normalizedCurrentTopic?.keyTerms?.length > 0 },
     { id: "videos", label: "Videos", visible: videoMediaItems.length > 0 },
     { id: "photos", label: "Photos", visible: photoMediaItems.length > 0 },
+    { id: "diagrams", label: "Diagrams", visible: diagramMediaItems.length > 0 },
     { id: "articles", label: "Articles", visible: articleMediaItems.length > 0 },
     { id: "podcasts", label: "Podcasts", visible: podcastMediaItems.length > 0 }
   ].filter((item) => item.visible);
@@ -883,6 +1081,39 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
 
       const data = await response.json();
       setReview(data);
+
+      if (normalizedCurrentTopic?.id) {
+        setProgressByTopic((current) => {
+          const previous = {
+            ...buildInitialTopicProgress(),
+            ...(current[normalizedCurrentTopic.id] || {})
+          };
+          const nextProgress = addMilestone(
+            {
+              ...previous,
+              terminalReviewed: true,
+              updatedAt: new Date().toISOString()
+            },
+            {
+              id: "terminal-reviewed",
+              label: "Terminal challenge reviewed",
+              type: "terminal"
+            }
+          );
+          const nextAchievement = calculateAchievement(nextProgress, topicRequirements, subtopicCards.length);
+
+          return {
+            ...current,
+            [normalizedCurrentTopic.id]: {
+              ...nextProgress,
+              badgeTier: nextAchievement.badgeTier,
+              certificateUnlocked: nextAchievement.complete,
+              milestoneClaimed: nextAchievement.quizDone,
+              completedAt: nextAchievement.complete ? new Date().toISOString() : nextProgress.completedAt || ""
+            }
+          };
+        });
+      }
     } catch {
       setReview({
         provider: "Unavailable",
@@ -906,20 +1137,101 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
     );
 
     const percent = questions.length ? Math.round((score / questions.length) * 100) : 0;
-    setMockResult({ score, total: questions.length, percent });
+    const passed = percent >= 70;
+    setMockResult({ score, total: questions.length, percent, passed, level: assessmentLevel });
 
-    if (normalizedCurrentTopic?.id && percent >= 70) {
-      setProgressByTopic((current) => ({
+    if (normalizedCurrentTopic?.id) {
+      setProgressByTopic((current) => {
+        const previous = {
+          ...buildInitialTopicProgress(),
+          ...(current[normalizedCurrentTopic.id] || {})
+        };
+        const withResult = {
+          ...previous,
+          levelResults: {
+            ...(previous.levelResults || {}),
+            [assessmentLevel]: {
+              score,
+              total: questions.length,
+              percent,
+              passed,
+              completedAt: new Date().toISOString()
+            }
+          },
+          milestoneClaimed: passed || previous.milestoneClaimed,
+          updatedAt: new Date().toISOString()
+        };
+        const nextProgress = passed
+          ? addMilestone(withResult, {
+              id: `quiz-${assessmentLevel}`,
+              label: `${assessmentLevel} MCQ cleared`,
+              type: "quiz"
+            })
+          : withResult;
+        const nextAchievement = calculateAchievement(nextProgress, topicRequirements, subtopicCards.length);
+
+        return {
+          ...current,
+          [normalizedCurrentTopic.id]: {
+            ...nextProgress,
+            badgeTier: nextAchievement.badgeTier,
+            certificateUnlocked: nextAchievement.complete,
+            completedAt: nextAchievement.complete ? new Date().toISOString() : nextProgress.completedAt || ""
+          }
+        };
+      });
+    }
+  }
+
+  function completeMockChallenge() {
+    if (!normalizedCurrentTopic?.id) {
+      return;
+    }
+
+    const prompts = activeMockPrompts.length ? activeMockPrompts : [{ id: "applied" }];
+    const answered = prompts.some((prompt) => String(mockAnswers[prompt.id] || "").trim().length >= 24);
+
+    if (!answered) {
+      setMockResult({
+        score: 0,
+        total: prompts.length,
+        percent: 0,
+        passed: false,
+        level: assessmentLevel,
+        message: "Write at least one substantial mock answer before claiming the challenge."
+      });
+      return;
+    }
+
+    setProgressByTopic((current) => {
+      const previous = {
+        ...buildInitialTopicProgress(),
+        ...(current[normalizedCurrentTopic.id] || {})
+      };
+      const nextProgress = addMilestone(
+        {
+          ...previous,
+          mockCompleted: true,
+          updatedAt: new Date().toISOString()
+        },
+        {
+          id: `mock-${assessmentLevel}`,
+          label: `${assessmentLevel} mock challenge submitted`,
+          type: "mock"
+        }
+      );
+      const nextAchievement = calculateAchievement(nextProgress, topicRequirements, subtopicCards.length);
+
+      return {
         ...current,
         [normalizedCurrentTopic.id]: {
-          ...(current[normalizedCurrentTopic.id] || {}),
-          completedSubtopics: current[normalizedCurrentTopic.id]?.completedSubtopics || [],
-          milestoneClaimed: true,
-          certificateUnlocked:
-            (current[normalizedCurrentTopic.id]?.completedSubtopics || []).length >= Math.max(1, subtopicCards.length - 1)
+          ...nextProgress,
+          badgeTier: nextAchievement.badgeTier,
+          certificateUnlocked: nextAchievement.complete,
+          completedAt: nextAchievement.complete ? new Date().toISOString() : nextProgress.completedAt || ""
         }
-      }));
-    }
+      };
+    });
   }
 
   function toggleSubtopicCompletion(subtopicId) {
@@ -928,22 +1240,71 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
     }
 
     setProgressByTopic((current) => {
-      const topicProgress = current[normalizedCurrentTopic.id] || {
-        completedSubtopics: [],
-        milestoneClaimed: false,
-        certificateUnlocked: false
+      const topicProgress = {
+        ...buildInitialTopicProgress(),
+        ...(current[normalizedCurrentTopic.id] || {})
       };
       const completedSubtopics = topicProgress.completedSubtopics.includes(subtopicId)
         ? topicProgress.completedSubtopics.filter((item) => item !== subtopicId)
         : [...topicProgress.completedSubtopics, subtopicId];
+      const nextBase = {
+        ...topicProgress,
+        completedSubtopics,
+        updatedAt: new Date().toISOString()
+      };
+      const nextProgress =
+        completedSubtopics.length >= Math.max(1, subtopicCards.length)
+          ? addMilestone(nextBase, {
+              id: "learning-path-complete",
+              label: "Learning path complete",
+              type: "read"
+            })
+          : nextBase;
+      const nextAchievement = calculateAchievement(nextProgress, topicRequirements, subtopicCards.length);
 
       return {
         ...current,
         [normalizedCurrentTopic.id]: {
-          ...topicProgress,
-          completedSubtopics,
-          certificateUnlocked:
-            topicProgress.milestoneClaimed && completedSubtopics.length >= Math.max(1, subtopicCards.length)
+          ...nextProgress,
+          badgeTier: nextAchievement.badgeTier,
+          certificateUnlocked: nextAchievement.complete,
+          completedAt: nextAchievement.complete ? new Date().toISOString() : nextProgress.completedAt || ""
+        }
+      };
+    });
+  }
+
+  function markReadOnlyTopicComplete() {
+    if (!normalizedCurrentTopic?.id) {
+      return;
+    }
+
+    setProgressByTopic((current) => {
+      const previous = {
+        ...buildInitialTopicProgress(),
+        ...(current[normalizedCurrentTopic.id] || {})
+      };
+      const nextProgress = addMilestone(
+        {
+          ...previous,
+          completedSubtopics: previous.completedSubtopics?.length ? previous.completedSubtopics : ["read-complete"],
+          updatedAt: new Date().toISOString()
+        },
+        {
+          id: "read-only-complete",
+          label: "Reading complete",
+          type: "read"
+        }
+      );
+      const nextAchievement = calculateAchievement(nextProgress, topicRequirements, Math.max(1, subtopicCards.length));
+
+      return {
+        ...current,
+        [normalizedCurrentTopic.id]: {
+          ...nextProgress,
+          badgeTier: nextAchievement.badgeTier,
+          certificateUnlocked: nextAchievement.complete,
+          completedAt: nextAchievement.complete ? new Date().toISOString() : nextProgress.completedAt || ""
         }
       };
     });
@@ -1251,13 +1612,30 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
       {showOnboarding ? (
         <div className="profile-modal-backdrop" role="presentation">
           <section className="profile-modal glass-card onboarding-modal">
-            <div className="section-heading compact-heading">
-              <span className="eyebrow">Welcome</span>
-              <h2>Pick at least three interests so we can shape your first study space.</h2>
+            <div className="onboarding-hero-row">
+              <div className="section-heading compact-heading">
+                <span className="eyebrow">Welcome</span>
+                <h2>Choose your learning signals.</h2>
+                <p>
+                  Pick at least three hobbies or interests. We use them to shape suggestions, theme mood, and your first
+                  dashboard experience.
+                </p>
+              </div>
+              <div className="onboarding-progress-ring">
+                <strong>{selectedInterests.length}</strong>
+                <span>/ 3</span>
+              </div>
             </div>
             <p className="muted-line">
               We’ll match your dashboard with a theme preset and better topic suggestions based on what you like.
             </p>
+            <div className="onboarding-selected-row">
+              {selectedInterests.length ? (
+                selectedInterests.map((interest) => <span key={interest}>{interest}</span>)
+              ) : (
+                <span>Choose interests below</span>
+              )}
+            </div>
             <div className="interest-grid">
               {INTEREST_OPTIONS.map((interest) => (
                 <button
@@ -1266,7 +1644,8 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                   onClick={() => toggleInterest(interest)}
                   type="button"
                 >
-                  {interest}
+                  <span>{interest}</span>
+                  <small>{selectedInterests.includes(interest) ? "Selected" : "Tap to add"}</small>
                 </button>
               ))}
             </div>
@@ -1348,6 +1727,14 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                         const sidebarTopicProgress = progressByTopic[topic.id] || {
                           completedSubtopics: []
                         };
+                        const sidebarAchievement = calculateAchievement(
+                          {
+                            ...buildInitialTopicProgress(),
+                            ...sidebarTopicProgress
+                          },
+                          getTopicRequirements(normalizedSidebarTopic, sidebarSubtopics),
+                          sidebarSubtopics.length
+                        );
                         const canDeleteTopic = customTopics.some((item) => item.id === topic.id);
 
                         return (
@@ -1367,6 +1754,9 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                               <span className="sidebar-topic-copy">
                                 <strong>{topic.title}</strong>
                                 <span>{topic.level}</span>
+                                <span className={`sidebar-badge-chip sidebar-badge-${sidebarAchievement.badgeTier}`}>
+                                  {(BADGE_TIERS[sidebarAchievement.badgeTier] || BADGE_TIERS.none).label}
+                                </span>
                               </span>
                               <span
                                 aria-hidden="true"
@@ -1508,39 +1898,42 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                 </div>
               </article>
 
-              <article className="glass-card quick-draft-card">
-                <div className="topic-card-top">
+              <article className="glass-card dashboard-progress-card">
+                <div className="dashboard-progress-hero">
+                  <AchievementBadge tier={achievement.badgeTier} label={`${badgeMeta.label} badge`} />
                   <div>
-                    <span className="eyebrow">Quick draft</span>
-                    <h3>Add your own topic</h3>
+                    <span className="eyebrow">Your progress</span>
+                    <h3>{badgeMeta.label} rank</h3>
+                    <p>{achievement.complete ? "This topic is mastered." : badgeMeta.next}</p>
                   </div>
-                  <span className="topic-kind">Manual</span>
                 </div>
-                <p>Create a custom topic draft here instead of mixing creation controls into the left navigation rail.</p>
-                <p>Use this when you already know the structure you want and just need it saved into the dashboard.</p>
-                <form className="topic-form" onSubmit={addTopic}>
-                  <input
-                    className="dashboard-input"
-                    onChange={(event) => setDraft((current) => ({ ...current, title: event.target.value }))}
-                    placeholder="Topic title"
-                    value={draft.title}
-                  />
-                  <textarea
-                    className="dashboard-input dashboard-textarea"
-                    onChange={(event) => setDraft((current) => ({ ...current, focus: event.target.value }))}
-                    placeholder="Topic description"
-                    value={draft.focus}
-                  />
-                  <input
-                    className="dashboard-input"
-                    onChange={(event) => setDraft((current) => ({ ...current, level: event.target.value }))}
-                    placeholder="Level"
-                    value={draft.level}
-                  />
-                  <button className="button" type="submit">
-                    Save draft
-                  </button>
-                </form>
+
+                <div className="dashboard-progress-meter" aria-hidden="true">
+                  <span style={{ width: `${progressSummary.averageProgress}%` }} />
+                </div>
+
+                <div className="dashboard-progress-stats">
+                  <span>
+                    <strong>{progressSummary.averageProgress}%</strong>
+                    Overall
+                  </span>
+                  <span>
+                    <strong>{progressSummary.completedTopics}</strong>
+                    Mastered
+                  </span>
+                  <span>
+                    <strong>{progressSummary.totalTopics}</strong>
+                    Topics
+                  </span>
+                </div>
+
+                <div className="dashboard-badges dashboard-badges-glow">
+                  {["bronze", "silver", "gold", "platinum"].map((tier) => (
+                    <span className={`dashboard-rank-badge dashboard-rank-${tier}`} key={tier}>
+                      {BADGE_TIERS[tier].label} {progressSummary.badgeCounts[tier]}
+                    </span>
+                  ))}
+                </div>
               </article>
             </section>
 
@@ -1628,23 +2021,45 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                 </article>
 
                 <article className="glass-card milestone-card">
-                  <div className="topic-card-top">
+                  <div className="topic-card-top milestone-card-top">
                     <div>
                       <span className="eyebrow">Milestones</span>
                       <h3>Track your learning journey</h3>
                     </div>
-                    <span className="topic-kind">{currentTopicProgress.certificateUnlocked ? "Certificate ready" : "In progress"}</span>
+                    <div className="badge-summary">
+                      <AchievementBadge tier={achievement.badgeTier} label={`${badgeMeta.label} badge`} />
+                      <div>
+                        <span className="topic-kind">{badgeMeta.label}</span>
+                        <p>{achievement.complete ? "All required milestones cleared." : badgeMeta.next}</p>
+                      </div>
+                    </div>
                   </div>
                   <p>
-                    Complete the learning path cards and clear at least one assessment level to unlock a digital certificate for this topic.
+                    This topic saves its learning-path progress, MCQ result, mock challenge, terminal review, badge, and milestone events to Firestore.
                   </p>
                   <div className="milestone-progress-bar" aria-hidden="true">
                     <span style={{ width: `${completionPercent}%` }} />
                   </div>
+                  <div className="milestone-check-grid">
+                    <span className={achievement.readDone ? "complete" : ""}>
+                      Reading path {achievement.readDone ? "done" : `${currentTopicProgress.completedSubtopics.length}/${Math.max(1, subtopicCards.length)}`}
+                    </span>
+                    {topicRequirements.quiz ? <span className={achievement.quizDone ? "complete" : ""}>MCQ {achievement.quizDone ? "cleared" : "pending"}</span> : null}
+                    {topicRequirements.mock ? <span className={achievement.mockDone ? "complete" : ""}>Mock {achievement.mockDone ? "submitted" : "pending"}</span> : null}
+                    {topicRequirements.terminal ? <span className={achievement.terminalDone ? "complete" : ""}>Terminal {achievement.terminalDone ? "reviewed" : "pending"}</span> : null}
+                    {!topicRequirements.quiz && !topicRequirements.mock && !topicRequirements.terminal ? <span className="complete">Read-only topic</span> : null}
+                  </div>
+                  {currentTopicProgress.milestones?.length ? (
+                    <div className="milestone-timeline">
+                      {currentTopicProgress.milestones.slice(0, 4).map((milestone) => (
+                        <span key={milestone.id}>{milestone.label}</span>
+                      ))}
+                    </div>
+                  ) : null}
                   <div className="dashboard-badges">
-                    <span>{currentTopicProgress.completedSubtopics.length} subtopics done</span>
-                    <span>{currentTopicProgress.milestoneClaimed ? "Assessment cleared" : "Assessment pending"}</span>
-                    <span>{currentTopicProgress.certificateUnlocked ? "Certificate unlocked" : "Keep going"}</span>
+                    <span>{completionPercent}% complete</span>
+                    <span>{achievement.complete ? "Certificate unlocked" : "Keep going"}</span>
+                    <span>{achievement.bestQuiz ? `Best MCQ ${achievement.bestQuiz.percent}%` : "No MCQ score yet"}</span>
                   </div>
                 </article>
 
@@ -1729,8 +2144,9 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                     <article className="glass-card study-card study-card-wide" id="subtopics">
                       <span className="eyebrow">Subtopics</span>
                       <h3>Walk the topic step by step</h3>
-                      <div className="subtopic-card-grid">
-                        {subtopicCards.map((item) => (
+                      {subtopicCards.length ? (
+                        <div className="subtopic-card-grid">
+                          {subtopicCards.map((item) => (
                           <article className="subtopic-learning-card" key={item.id}>
                             <strong>{item.title}</strong>
                             <p>{item.summary}</p>
@@ -1744,8 +2160,16 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                               </button>
                             </div>
                           </article>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="read-only-complete-card">
+                          <p>This is a reading-first topic. Mark it done when the explanation and reference sections are clear.</p>
+                          <button className="button" onClick={markReadOnlyTopicComplete} type="button">
+                            {achievement.readDone ? "Reading complete" : "Mark reading done"}
+                          </button>
+                        </div>
+                      )}
                     </article>
 
                     {normalizedCurrentTopic.example ? (
@@ -1792,6 +2216,14 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                       </article>
                     ) : null}
 
+                    {diagramMediaItems.length ? (
+                      <article className="glass-card study-card study-card-wide media-section-card" id="diagrams">
+                        <span className="eyebrow">Diagrams</span>
+                        <h3>Maps, charts, and visual explainers</h3>
+                        <MediaShelf items={diagramMediaItems} mode="diagram" />
+                      </article>
+                    ) : null}
+
                     {articleMediaItems.length ? (
                       <article className="glass-card study-card study-card-wide media-section-card" id="articles">
                         <span className="eyebrow">Articles</span>
@@ -1808,7 +2240,7 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                       </article>
                     ) : null}
 
-                    {!videoMediaItems.length && !photoMediaItems.length && !articleMediaItems.length && !podcastMediaItems.length && mediaItems.length ? (
+                    {!videoMediaItems.length && !photoMediaItems.length && !diagramMediaItems.length && !articleMediaItems.length && !podcastMediaItems.length && mediaItems.length ? (
                       <article className="glass-card study-card study-card-wide media-section-card">
                         <span className="eyebrow">Media</span>
                         <h3>Resources</h3>
@@ -1820,10 +2252,17 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
 
                 {activePanel === "practice" ? (
                   <section className="study-grid">
-                    <article className="glass-card study-card study-card-wide">
-                      <span className="eyebrow">Practice task</span>
-                      <h3>{normalizedCurrentTopic.exercise?.title || "Practice module"}</h3>
-                      <p>{normalizedCurrentTopic.exercise?.prompt || "Exercise details will appear here."}</p>
+                    <article className="glass-card study-card study-card-wide challenge-hero-card">
+                      <div>
+                        <span className="eyebrow">Practice arena</span>
+                        <h3>{normalizedCurrentTopic.exercise?.title || "Practice module"}</h3>
+                        <p>{normalizedCurrentTopic.exercise?.prompt || "Clear the MCQ gate, then use terminal review when this topic has code practice."}</p>
+                      </div>
+                      <div className="challenge-stat-grid">
+                        <span className={achievement.quizDone ? "complete" : ""}>MCQ gate</span>
+                        <span className={achievement.terminalDone ? "complete" : ""}>Terminal review</span>
+                        <span>{badgeMeta.label} badge</span>
+                      </div>
                       {normalizedCurrentTopic.exercise?.checklist?.length ? (
                         <ul className="list-block">
                           {normalizedCurrentTopic.exercise.checklist.map((item) => (
@@ -1833,23 +2272,21 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                       ) : null}
                     </article>
 
-                    <article className="glass-card study-card">
-                      <span className="eyebrow">AI prompts</span>
-                      <h3>Useful prompt ideas</h3>
-                      <div className="chip-row">
-                        {prompts.map((item) => (
-                          <span className="tag" key={item}>
-                            {item}
-                          </span>
-                        ))}
+                    <article className="glass-card study-card challenge-side-card">
+                      <span className="eyebrow">Challenge rules</span>
+                      <h3>How to rank up</h3>
+                      <div className="challenge-step-list">
+                        <span className={achievement.readDone ? "complete" : ""}>Finish the learning path</span>
+                        <span className={achievement.quizDone ? "complete" : ""}>Score 70% or more on MCQs</span>
+                        {topicRequirements.terminal ? <span className={achievement.terminalDone ? "complete" : ""}>Submit terminal code for review</span> : null}
                       </div>
                     </article>
 
-                    <article className="glass-card study-card">
+                    <article className="glass-card study-card study-card-wide challenge-test-card">
                       <span className="eyebrow">Topic practice test</span>
                       <h3>Level-based MCQ check</h3>
                       <div className="difficulty-switch">
-                        {["beginner", "intermediate", "advanced"].map((value) => (
+                        {ASSESSMENT_LEVELS.map((value) => (
                           <button
                             className={`mode-button ${assessmentLevel === value ? "active" : ""}`}
                             key={value}
@@ -1893,9 +2330,12 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                             Score topic test
                           </button>
                           {mockResult ? (
-                            <p className="muted-line">
-                              Score: {mockResult.score}/{mockResult.total} ({mockResult.percent}%)
-                            </p>
+                            <div className={`challenge-result ${mockResult.passed ? "passed" : "retry"}`}>
+                              <strong>
+                                Score: {mockResult.score}/{mockResult.total} ({mockResult.percent}%)
+                              </strong>
+                              <span>{mockResult.passed ? "Gate cleared. Silver badge progress saved." : "Retry the gate to clear this level."}</span>
+                            </div>
                           ) : null}
                         </>
                       ) : (
@@ -1907,12 +2347,12 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
 
                 {activePanel === "mock" ? (
                   <section className="study-grid">
-                    <article className="glass-card study-card study-card-wide">
+                    <article className="glass-card study-card study-card-wide challenge-hero-card">
                       <span className="eyebrow">Track mock test</span>
                       <h3>{topicCapabilities.mockEnabled ? "Level-based applied prompts" : "Reflection prompts"}</h3>
                       {topicCapabilities.mockEnabled ? (
                         <div className="difficulty-switch">
-                          {["beginner", "intermediate", "advanced"].map((value) => (
+                          {ASSESSMENT_LEVELS.map((value) => (
                             <button
                               className={`mode-button ${assessmentLevel === value ? "active" : ""}`}
                               key={value}
@@ -1964,9 +2404,9 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                           </div>
                         )
                       ) : (
-                        <div className="mock-question">
-                          <p>
-                            <strong>Write a short summary, explain the idea in your own words, and list one real-world
+                          <div className="mock-question">
+                            <p>
+                              <strong>Write a short summary, explain the idea in your own words, and list one real-world
                             use case.</strong>
                           </p>
                           <textarea
@@ -1982,6 +2422,14 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
                           />
                         </div>
                       )}
+                      {topicCapabilities.mockEnabled ? (
+                        <div className="challenge-submit-row">
+                          <button className="button" onClick={completeMockChallenge} type="button">
+                            {achievement.mockDone ? "Mock submitted" : "Submit mock challenge"}
+                          </button>
+                          <span>{achievement.mockDone ? "Gold badge progress saved." : "A substantial answer unlocks the mock milestone."}</span>
+                        </div>
+                      ) : null}
                     </article>
                   </section>
                 ) : null}
@@ -2042,11 +2490,13 @@ export default function TopicDashboard({ curriculum, activeTrack }) {
         drafts={drafts}
         isAnalyzing={isAnalyzing}
         isOpen={terminalOpen}
+        badgeTier={achievement.badgeTier}
         onAnalyze={analyzePractice}
         onDraftChange={updateDraft}
         onFileChange={changeActiveTerminalFile}
         onToggle={() => setTerminalOpen((current) => !current)}
         review={review}
+        terminalReviewed={achievement.terminalDone}
         terminalConfig={terminalConfig}
       />
     </div>

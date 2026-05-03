@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -13,6 +15,11 @@ import { auth, db, ensureFirebaseReady, googleProvider } from "@/lib/firebase/cl
 import { THEME_PRESETS } from "@/lib/personalization";
 import StudyHeader from "@/components/study-header";
 import { ensureUserProfile } from "@/lib/profile-store";
+
+const LandingParticles = dynamic(() => import("@/components/landing-particles"), {
+  ssr: false,
+  loading: () => <div className="landing-particles landing-particles-fallback" aria-hidden="true" />
+});
 
 const PLATFORM_STEPS = [
   {
@@ -56,7 +63,7 @@ const LANDING_STORIES = [
     eyebrow: "Adaptive study",
     title: "The website changes with the learner, not the other way around.",
     body:
-      "Before login, the landing page rotates through different moods. After login, onboarding selects interests and the dashboard responds with matching themes, suggestions, and study direction.",
+      "Before login, the landing page stays focused and calm. After login, onboarding selects interests and the dashboard responds with matching themes, suggestions, and study direction.",
     image:
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80",
     mediaType: "image"
@@ -82,6 +89,7 @@ const HERO_FACTS = [
 ];
 
 export default function LandingPage({ tracks }) {
+  const router = useRouter();
   const firebaseReady = ensureFirebaseReady();
   const [user, setUser] = useState(null);
   const [authReady, setAuthReady] = useState(false);
@@ -133,6 +141,10 @@ export default function LandingPage({ tracks }) {
             const profile = await ensureUserProfile(db, nextUser);
             setThemePreset(profile.themePreset || THEME_PRESETS[0].id);
           }
+
+          if (nextUser) {
+            router.replace("/home");
+          }
         })
         .catch(() => {
           setUser(nextUser);
@@ -141,22 +153,7 @@ export default function LandingPage({ tracks }) {
     });
 
     return () => unsubscribe();
-  }, [firebaseReady]);
-
-  useEffect(() => {
-    if (user) {
-      return undefined;
-    }
-
-    const interval = window.setInterval(() => {
-      setThemePreset((current) => {
-        const index = THEME_PRESETS.findIndex((item) => item.id === current);
-        return THEME_PRESETS[(index + 1) % THEME_PRESETS.length].id;
-      });
-    }, 5000);
-
-    return () => window.clearInterval(interval);
-  }, [user]);
+  }, [firebaseReady, router]);
 
   async function submitAuth() {
     if (!firebaseReady || !auth) {
@@ -199,6 +196,11 @@ export default function LandingPage({ tracks }) {
     await signOut(auth);
   }
 
+  function handleGetStarted() {
+    setMode("signup");
+    document.getElementById("landing-auth-panel")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
   return (
     <div className="site-shell">
       <StudyHeader
@@ -212,15 +214,36 @@ export default function LandingPage({ tracks }) {
       />
 
       <main className="landing-main">
-        <section className="hero-section landing-hero">
+        <section className="hero-section landing-hero studio-landing-hero">
+          <LandingParticles />
           <div className="hero-copy">
-            <span className="eyebrow">Study first experience</span>
-            <h1>Search any topic and turn it into a full AI study page.</h1>
+            <span className="eyebrow">Learner AI Studio</span>
+            <h1>Build a learning workspace from one prompt.</h1>
             <p>
-              This website is built for learners who want depth, clarity, and flow. A simple search can become a long
-              study page with subtopics, explanations, images, videos, examples, and practice layers when the topic
-              needs them.
+              Prompt for wildlife, JavaScript, architecture, history, Apex, or anything else. Learner Dev turns it into
+              a structured study page with verified media, milestones, badges, and practice only when the topic needs it.
             </p>
+
+            <div className="studio-prompt-console" aria-label="Example prompt builder">
+              <div className="studio-prompt-topbar">
+                <span />
+                <span />
+                <span />
+                <strong>New topic prompt</strong>
+              </div>
+              <p>Generate a visual learning path for rainforest wildlife with working videos, photos, diagrams, and a reading-first completion badge.</p>
+              <div className="studio-console-actions">
+                <span>Verified media</span>
+                <span>Adaptive tests</span>
+                <span>Firestore progress</span>
+              </div>
+            </div>
+
+            <div className="landing-hero-cta">
+              <button className="button landing-get-started" onClick={handleGetStarted} type="button">
+                Get Started
+              </button>
+            </div>
 
             <div className="hero-metrics">
               {HERO_FACTS.map((item) => (
@@ -233,10 +256,10 @@ export default function LandingPage({ tracks }) {
             </div>
           </div>
 
-          <aside className="study-panel">
+          <aside className="study-panel" id="landing-auth-panel">
             <div className="section-heading compact-heading">
-              <span className="eyebrow">Account access</span>
-              <h2>{user ? "Signed in" : authReady ? "Login or create account" : "Checking auth"}</h2>
+              <span className="eyebrow">Start building</span>
+              <h2>{user ? "Taking you home" : authReady ? "Login or create account" : "Checking auth"}</h2>
             </div>
 
             {user ? (

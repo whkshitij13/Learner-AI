@@ -13,7 +13,9 @@ export default function PracticeTerminal({
   onDraftChange,
   onAnalyze,
   isAnalyzing,
-  review
+  review,
+  terminalReviewed = false,
+  badgeTier = "none"
 }) {
   const files = useMemo(() => terminalConfig?.files || [], [terminalConfig]);
   const terminalTitle = terminalConfig?.title || "Practice terminal";
@@ -28,19 +30,29 @@ export default function PracticeTerminal({
   return (
     <>
       <button className="terminal-launcher" onClick={onToggle} type="button">
-        {isOpen ? "Close Practice Terminal" : "Open Practice Terminal"}
+        {isOpen ? "Close Challenge Terminal" : terminalReviewed ? "Terminal Reviewed" : "Open Challenge Terminal"}
       </button>
       {isOpen ? (
         <aside className="terminal-shell">
           <div className="terminal-topbar">
             <div>
-              <p className="eyebrow">Practice Terminal</p>
+              <p className="eyebrow">Challenge Terminal</p>
               <h3>{terminalTitle}</h3>
               <p className="muted-copy">{terminalDescription}</p>
+            </div>
+            <div className="terminal-rank-chip">
+              <span>{badgeTier}</span>
+              <strong>{terminalReviewed ? "Reviewed" : "Boss gate"}</strong>
             </div>
             <button className="ghost-btn" onClick={onToggle} type="button">
               Hide
             </button>
+          </div>
+
+          <div className="terminal-quest-strip">
+            <span className="complete">Read the brief</span>
+            <span>Edit the starter files</span>
+            <span className={terminalReviewed ? "complete" : ""}>Request review</span>
           </div>
 
           <div className="terminal-files">
@@ -65,10 +77,10 @@ export default function PracticeTerminal({
 
           <div className="terminal-actions">
             <button className="primary-btn" onClick={onAnalyze} type="button">
-              {isAnalyzing ? "Reviewing..." : `${compilerLabel} review`}
+              {isAnalyzing ? "Reviewing..." : terminalReviewed ? "Review again" : `${compilerLabel} challenge review`}
             </button>
             <p className="muted-copy">
-              Uses topic-aware validation first, then Gemini feedback when `GEMINI_API_KEY` is configured.
+              This terminal milestone is stored in Firestore after a review, then contributes to the topic badge.
             </p>
           </div>
 

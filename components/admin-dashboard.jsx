@@ -19,6 +19,7 @@ export default function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
+  const [confirmAction, setConfirmAction] = useState(null);
 
   useEffect(() => {
     const storedTheme = window.localStorage.getItem("learner-dev-theme") || "light";
@@ -96,6 +97,21 @@ export default function AdminDashboard() {
     );
   }, [search, users]);
 
+  const adminStats = useMemo(() => {
+    const totalSearches = users.reduce((sum, entry) => sum + entry.searches.length, 0);
+    const totalTopics = users.reduce(
+      (sum, entry) => sum + Object.values(entry.dashboard?.tracks || {}).reduce((trackSum, track) => trackSum + (track?.topics?.length || 0), 0),
+      0
+    );
+    const onboarded = users.filter((entry) => entry.profile?.onboardingCompleted).length;
+
+    return {
+      totalSearches,
+      totalTopics,
+      onboarded
+    };
+  }, [users]);
+
   async function refreshUsers(message) {
     if (!db) {
       return;
@@ -127,6 +143,16 @@ export default function AdminDashboard() {
     await refreshUsers("Search entry deleted.");
   }
 
+  function requestDeleteSearch(userId, entry) {
+    setConfirmAction({
+      tone: "danger",
+      title: "Delete this search entry?",
+      body: `This removes "${entry.query}" from the user's stored search history.`,
+      confirmLabel: "Delete search",
+      onConfirm: () => handleDeleteSearch(userId, entry)
+    });
+  }
+
   async function handleClearHistory(userId) {
     if (!db) {
       return;
@@ -136,6 +162,16 @@ export default function AdminDashboard() {
     await refreshUsers("User history cleared.");
   }
 
+  function requestClearHistory(entry) {
+    setConfirmAction({
+      tone: "warning",
+      title: "Clear all search history?",
+      body: `This removes ${entry.searches.length} stored search item(s) for ${entry.root?.email || entry.id}.`,
+      confirmLabel: "Clear history",
+      onConfirm: () => handleClearHistory(entry.id)
+    });
+  }
+
   async function handleDeleteUser(userId) {
     if (!db) {
       return;
@@ -143,6 +179,26 @@ export default function AdminDashboard() {
 
     await purgeUserData(db, userId);
     await refreshUsers("User data deleted from Firestore.");
+  }
+
+  function requestDeleteUser(entry) {
+    setConfirmAction({
+      tone: "danger",
+      title: "Delete this user's Firestore data?",
+      body: `This permanently removes profile, dashboard, and search data for ${entry.root?.email || entry.id}.`,
+      confirmLabel: "Delete user data",
+      onConfirm: () => handleDeleteUser(entry.id)
+    });
+  }
+
+  async function confirmPendingAction() {
+    if (!confirmAction?.onConfirm) {
+      return;
+    }
+
+    const action = confirmAction;
+    setConfirmAction(null);
+    await action.onConfirm();
   }
 
   async function handleSaveMeta(entry) {
@@ -166,20 +222,38 @@ export default function AdminDashboard() {
       />
 
       <main className="dashboard-main admin-main">
-        {/* <section className="dashboard-hero glass-card">
+        <section className="dashboard-hero admin-command-hero">
           <div>
             <span className="eyebrow">Admin dashboard</span>
-            <h1>Manage users, history, interests, and themes.</h1>
-            <p>Only the admin account can see this space. You can review what users search, update preferences, and remove stored Firestore data.</p>
+            <h1>Command center for users, history, and preferences.</h1>
+            <p>Review learner activity, tune profile metadata, and perform destructive actions only after confirmation.</p>
           </div>
-          <div className="dashboard-badges">
+          <div className="dashboard-badges dashboard-badges-glow">
             <span>{users.length} users</span>
-            <span>{users.reduce((sum, entry) => sum + entry.searches.length, 0)} search entries</span>
-            <span>Admin only</span>
+            <span>{adminStats.totalSearches} searches</span>
+            <span>{adminStats.totalTopics} topics</span>
           </div>
-        </section> */}
+        </section>
 
-        <section className="glass-card study-card">
+        <section className="admin-insight-grid">
+          <article className="glass-card admin-insight-card">
+            <span className="eyebrow">Onboarded</span>
+            <strong>{adminStats.onboarded}</strong>
+            <p>Learners with saved interests and theme direction.</p>
+          </article>
+          <article className="glass-card admin-insight-card">
+            <span className="eyebrow">Search volume</span>
+            <strong>{adminStats.totalSearches}</strong>
+            <p>Stored user search entries across all profiles.</p>
+          </article>
+          <article className="glass-card admin-insight-card">
+            <span className="eyebrow">Generated topics</span>
+            <strong>{adminStats.totalTopics}</strong>
+            <p>Topics currently saved in dashboard tracks.</p>
+          </article>
+        </section>
+
+        <section className="glass-card study-card admin-toolbar">
           <div className="topic-card-top">
             <div>
               <span className="eyebrow">Search users</span>
@@ -290,10 +364,10 @@ export default function AdminDashboard() {
                   <button className="button" onClick={() => handleSaveMeta(entry)} type="button">
                     Save user meta
                   </button>
-                  <button className="button button-secondary" onClick={() => handleClearHistory(entry.id)} type="button">
+                  <button className="button button-secondary" onClick={() => requestClearHistory(entry)} type="button">
                     Clear history
                   </button>
-                  <button className="button button-secondary danger-link" onClick={() => handleDeleteUser(entry.id)} type="button">
+                  <button className="button button-secondary danger-link" onClick={() => requestDeleteUser(entry)} type="button">
                     Delete user data
                   </button>
                 </div>
@@ -314,7 +388,7 @@ export default function AdminDashboard() {
                         </p>
                         <p>{searchEntry.createdAt || "No timestamp"}</p>
                         <p>{searchEntry.track || "workspace"} · {searchEntry.source}</p>
-                        <button className="ghost-btn" onClick={() => handleDeleteSearch(entry.id, searchEntry)} type="button">
+                        <button className="ghost-btn danger-link" onClick={() => requestDeleteSearch(entry.id, searchEntry)} type="button">
                           Delete search
                         </button>
                       </div>
@@ -328,6 +402,24 @@ export default function AdminDashboard() {
           </section>
         )}
       </main>
+
+      {confirmAction ? (
+        <div className="profile-modal-backdrop" role="presentation">
+          <section className={`profile-modal glass-card confirm-modal confirm-modal-${confirmAction.tone}`} role="dialog" aria-modal="true" aria-labelledby="admin-confirm-title">
+            <span className="eyebrow">Confirm action</span>
+            <h2 id="admin-confirm-title">{confirmAction.title}</h2>
+            <p>{confirmAction.body}</p>
+            <div className="header-actions-compact">
+              <button className="button button-secondary" onClick={() => setConfirmAction(null)} type="button">
+                Cancel
+              </button>
+              <button className="button danger-button" onClick={confirmPendingAction} type="button">
+                {confirmAction.confirmLabel}
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -114,6 +114,12 @@ function isArticleItem(item) {
   return type.includes("article") || type.includes("guide") || type.includes("reading");
 }
 
+function isDiagramItem(item, mode) {
+  const type = String(item?.type || "").toLowerCase();
+
+  return mode === "diagram" || type.includes("diagram") || type.includes("map") || type.includes("chart") || type.includes("infographic");
+}
+
 function getAudioUrl(item) {
   const href = String(item?.audio || item?.href || "").trim();
 
@@ -175,6 +181,14 @@ function MediaThumb({ item, isVideo }) {
     );
   }
 
+  if (isDiagramItem(item)) {
+    return (
+      <div className="media-thumb-wrap media-thumb-fallback media-thumb-diagram">
+        <span className="media-fallback-icon">Diagram</span>
+      </div>
+    );
+  }
+
   if (isArticleItem(item)) {
     return (
       <div className="media-thumb-wrap media-thumb-fallback media-thumb-article">
@@ -207,7 +221,7 @@ export default function MediaShelf({ items, mode = "mixed" }) {
     () =>
       `topic-media-grid ${mode === "video" ? "topic-media-grid-video" : ""} ${mode === "photo" ? "topic-media-grid-photo" : ""} ${
         mode === "article" ? "topic-media-grid-article" : ""
-      } ${mode === "podcast" ? "topic-media-grid-podcast" : ""}`.trim(),
+      } ${mode === "podcast" ? "topic-media-grid-podcast" : ""} ${mode === "diagram" ? "topic-media-grid-diagram" : ""}`.trim(),
     [mode]
   );
 
@@ -242,7 +256,7 @@ export default function MediaShelf({ items, mode = "mixed" }) {
       return;
     }
 
-    if (mode === "photo") {
+    if (mode === "photo" || mode === "diagram") {
       if (item.image) {
         setActiveItem(item);
         return;
@@ -305,7 +319,9 @@ export default function MediaShelf({ items, mode = "mixed" }) {
                     : "Open video source"
                   : itemIsAudio
                     ? "Open podcast"
-                    : isArticleItem(item) || mode === "article"
+                    : isDiagramItem(item, mode)
+                      ? "Open diagram"
+                      : isArticleItem(item) || mode === "article"
                       ? "Open article"
                       : mode === "photo"
                         ? "Open photo"
